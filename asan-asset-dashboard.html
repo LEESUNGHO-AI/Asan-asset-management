@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아산시 통합자산관리 대시보드 v3.0</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a);
+      color: #fff;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    
+    .container { padding: 16px; max-width: 1280px; margin: 0 auto; }
+    
+    /* Utilities */
+    .flex { display: flex; }
+    .flex-wrap { flex-wrap: wrap; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-left { text-align: left; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .hidden { display: none; }
+    .w-full { width: 100%; }
+    .overflow-hidden { overflow: hidden; }
+    .overflow-x-auto { overflow-x: auto; }
+    .transition-all { transition: all 0.3s ease; }
+    
+    /* Text sizes */
+    .text-xs { font-size: 12px; }
+    .text-sm { font-size: 14px; }
+    .text-lg { font-size: 18px; }
+    .text-xl { font-size: 20px; }
+    .text-2xl { font-size: 24px; }
+    .text-3xl { font-size: 30px; }
+    .text-4xl { font-size: 36px; }
+    
+    /* Colors */
+    .text-white { color: #fff; }
+    .text-slate-300 { color: #cbd5e1; }
+    .text-slate-400 { color: #94a3b8; }
+    .text-slate-500 { color: #64748b; }
+    .text-blue-200 { color: #bfdbfe; }
+    .text-blue-300 { color: #93c5fd; }
+    .text-blue-400 { color: #60a5fa; }
+    .text-emerald-200 { color: #a7f3d0; }
+    .text-emerald-300 { color: #6ee7b7; }
+    .text-emerald-400 { color: #34d399; }
+    .text-purple-200 { color: #ddd6fe; }
+    .text-purple-300 { color: #c4b5fd; }
+    .text-red-200 { color: #fecaca; }
+    .text-red-300 { color: #fca5a5; }
+    .text-red-400 { color: #f87171; }
+    .text-amber-400 { color: #fbbf24; }
+    
+    /* Backgrounds */
+    .bg-slate-700 { background-color: #334155; }
+    .bg-slate-800 { background-color: #1e293b; }
+    .bg-emerald-500 { background-color: #10b981; }
+    .bg-red-500 { background-color: #ef4444; }
+    .bg-amber-500 { background-color: #f59e0b; }
+    .bg-orange-500 { background-color: #f97316; }
+    .bg-yellow-500 { background-color: #eab308; }
+    .bg-blue-500 { background-color: #3b82f6; }
+    .bg-purple-500 { background-color: #8b5cf6; }
+    
+    /* Spacing */
+    .p-3 { padding: 12px; }
+    .p-4 { padding: 16px; }
+    .p-5 { padding: 20px; }
+    .px-2 { padding-left: 8px; padding-right: 8px; }
+    .px-3 { padding-left: 12px; padding-right: 12px; }
+    .px-4 { padding-left: 16px; padding-right: 16px; }
+    .py-1 { padding-top: 4px; padding-bottom: 4px; }
+    .py-2 { padding-top: 8px; padding-bottom: 8px; }
+    .py-3 { padding-top: 12px; padding-bottom: 12px; }
+    .mb-2 { margin-bottom: 8px; }
+    .mb-3 { margin-bottom: 12px; }
+    .mb-4 { margin-bottom: 16px; }
+    .mb-6 { margin-bottom: 24px; }
+    .mt-1 { margin-top: 4px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 12px; }
+    .mt-6 { margin-top: 24px; }
+    
+    /* Border radius */
+    .rounded { border-radius: 4px; }
+    .rounded-lg { border-radius: 8px; }
+    .rounded-xl { border-radius: 12px; }
+    .rounded-2xl { border-radius: 16px; }
+    .rounded-full { border-radius: 9999px; }
+    
+    /* Grid */
+    .grid { display: grid; }
+    .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+    @media (min-width: 1024px) {
+      .lg-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+      .lg-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+    }
+    
+    /* Custom components */
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(51, 65, 85, 0.5);
+    }
+    
+    .gradient-text {
+      background: linear-gradient(to right, #22d3ee, #3b82f6, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .card-blue {
+      background: linear-gradient(to bottom right, rgba(37, 99, 235, 0.8), rgba(30, 64, 175, 0.8));
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    
+    .card-emerald {
+      background: linear-gradient(to bottom right, rgba(5, 150, 105, 0.8), rgba(4, 120, 87, 0.8));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    
+    .card-purple {
+      background: linear-gradient(to bottom right, rgba(124, 58, 237, 0.8), rgba(91, 33, 182, 0.8));
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    
+    .card-red {
+      background: linear-gradient(to bottom right, rgba(220, 38, 38, 0.8), rgba(185, 28, 28, 0.8));
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    
+    .card-warning {
+      background: linear-gradient(to right, rgba(127, 29, 29, 0.5), rgba(124, 45, 18, 0.4));
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .shadow-card { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
+    
+    .progress-bar {
+      background: rgba(51, 65, 85, 0.5);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      transition: width 0.7s ease;
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    .animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    
+    /* Tab buttons */
+    .tab-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-btn.active {
+      background: linear-gradient(to right, #06b6d4, #3b82f6);
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(6, 182, 212, 0.2);
+    }
+    
+    .tab-btn:not(.active) {
+      background: transparent;
+      color: #94a3b8;
+    }
+    
+    .tab-btn:not(.active):hover {
+      background: rgba(51, 65, 85, 0.5);
+      color: #fff;
+    }
+    
+    /* Table */
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 12px; }
+    th { color: #94a3b8; border-bottom: 1px solid #334155; }
+    tbody tr { border-bottom: 1px solid rgba(51, 65, 85, 0.3); }
+    tbody tr:hover { background: rgba(51, 65, 85, 0.2); }
+    
+    /* Badge */
+    .badge {
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .badge-status {
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 12px;
+    }
+    
+    /* Width helpers */
+    .w-2 { width: 8px; }
+    .w-10 { width: 40px; }
+    .w-12 { width: 48px; }
+    .w-24 { width: 96px; }
+    .h-2 { height: 8px; }
+    .h-2-5 { height: 10px; }
+    .h-4 { height: 16px; }
+    .h-10 { height: 40px; }
+    
+    /* Space between children */
+    .space-y-2 > * + * { margin-top: 8px; }
+    .space-y-3 > * + * { margin-top: 12px; }
+    .space-y-4 > * + * { margin-top: 16px; }
+    .space-y-5 > * + * { margin-top: 20px; }
+    
+    /* Responsive */
+    @media (min-width: 1024px) {
+      .lg-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 class="text-2xl font-bold gradient-text">📊 아산시 통합자산관리 대시보드</h1>
+          <p class="text-slate-400 text-sm mt-1">Digital OASIS - Smart Asset Management Platform v3.0</p>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 text-xs text-slate-400" style="background: rgba(30, 41, 59, 0.5); padding: 6px 12px; border-radius: 9999px;">
+            <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;" class="animate-pulse"></div>
+            실시간 연동
+          </div>
+          <div class="text-sm text-slate-500">2025.11.27</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="flex gap-2 mb-6" style="background: rgba(30, 41, 59, 0.5); padding: 6px; border-radius: 12px; width: fit-content;">
+      <button onclick="showTab('overview')" id="tab-overview" class="tab-btn active">📌 종합현황</button>
+      <button onclick="showTab('assets')" id="tab-assets" class="tab-btn">📦 자산현황</button>
+      <button onclick="showTab('projects')" id="tab-projects" class="tab-btn">🏗️ 프로젝트</button>
+      <button onclick="showTab('budget')" id="tab-budget" class="tab-btn">💰 예산관리</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="content-overview" class="tab-content space-y-5">
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-2 lg-grid-cols-4 gap-4">
+        <div class="card-blue rounded-2xl p-4 shadow-card">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-3xl">📦</span>
+            <span class="badge-status" style="background: rgba(96, 165, 250, 0.3);">운영중</span>
+          </div>
+          <div class="text-4xl font-bold">44</div>
+          <div class="text-blue-200 text-sm mt-1">기존 자산</div>
+          <div class="text-xs mt-1" style="color: rgba(147, 197, 253, 0.8);">₩1,921만</div>
+        </div>
+
+        <div class="card-emerald rounded-2xl p-4 shadow-card">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-3xl">🚀</span>
+            <span class="badge-status" style="background: rgba(52, 211, 153, 0.3);">도입예정</span>
+          </div>
+          <div class="text-4xl font-bold">41</div>
+          <div class="text-emerald-200 text-sm mt-1">신규 자산</div>
+          <div class="text-xs mt-1" style="color: rgba(110, 231, 183, 0.8);">₩35억+</div>
+        </div>
+
+        <div class="card-purple rounded-2xl p-4 shadow-card">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-3xl">🏗️</span>
+            <span class="badge-status" style="background: rgba(196, 181, 253, 0.3);">진행중</span>
+          </div>
+          <div class="text-4xl font-bold">5</div>
+          <div class="text-purple-200 text-sm mt-1">대형 인프라</div>
+          <div class="text-xs mt-1" style="color: rgba(196, 181, 253, 0.8);">₩115억</div>
+        </div>
+
+        <div class="card-red rounded-2xl p-4 shadow-card">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-3xl">💰</span>
+            <span class="badge-status animate-pulse" style="background: rgba(248, 113, 113, 0.3);">주의</span>
+          </div>
+          <div class="text-4xl font-bold">11.9%</div>
+          <div class="text-red-200 text-sm mt-1">예산 집행률</div>
+          <div class="text-xs mt-1" style="color: rgba(252, 165, 165, 0.8);">₩20.9억 / ₩176억</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="grid grid-cols-1 lg-grid-cols-3 gap-4">
+        <!-- KPI -->
+        <div class="glass rounded-2xl p-4">
+          <h3 class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">📊 KPI 현황</h3>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3">
+              <div class="w-24 text-xs text-slate-400">자산 등록률</div>
+              <div class="progress-bar h-2-5" style="flex: 1;">
+                <div class="progress-fill bg-emerald-500" style="width: 100%;"></div>
+              </div>
+              <div class="text-sm font-bold w-12 text-right text-emerald-400">100%</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-24 text-xs text-slate-400">자산 가동률</div>
+              <div class="progress-bar h-2-5" style="flex: 1;">
+                <div class="progress-fill bg-emerald-500" style="width: 100%;"></div>
+              </div>
+              <div class="text-sm font-bold w-12 text-right text-emerald-400">100%</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-24 text-xs text-slate-400">예산 집행률</div>
+              <div class="progress-bar h-2-5" style="flex: 1;">
+                <div class="progress-fill bg-red-500" style="width: 11.9%;"></div>
+              </div>
+              <div class="text-sm font-bold w-12 text-right text-red-400">11.9%</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-24 text-xs text-slate-400">계약 체결률</div>
+              <div class="progress-bar h-2-5" style="flex: 1;">
+                <div class="progress-fill bg-amber-500" style="width: 84.6%;"></div>
+              </div>
+              <div class="text-sm font-bold w-12 text-right text-amber-400">84.6%</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="w-24 text-xs text-slate-400">점검 준수율</div>
+              <div class="progress-bar h-2-5" style="flex: 1;">
+                <div class="progress-fill bg-emerald-500" style="width: 100%;"></div>
+              </div>
+              <div class="text-sm font-bold w-12 text-right text-emerald-400">100%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Pie Chart -->
+        <div class="glass rounded-2xl p-4">
+          <h3 class="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">📦 카테고리별 분포</h3>
+          <div class="flex justify-center">
+            <canvas id="categoryChart" width="200" height="200"></canvas>
+          </div>
+          <div class="flex flex-wrap justify-center gap-3 mt-3">
+            <div class="flex items-center gap-2 text-xs"><div style="width: 10px; height: 10px; border-radius: 50%; background: #3b82f6;"></div><span class="text-slate-400">영상음향(29)</span></div>
+            <div class="flex items-center gap-2 text-xs"><div style="width: 10px; height: 10px; border-radius: 50%; background: #10b981;"></div><span class="text-slate-400">전시(6)</span></div>
+            <div class="flex items-center gap-2 text-xs"><div style="width: 10px; height: 10px; border-radius: 50%; background: #f59e0b;"></div><span class="text-slate-400">네트워크(6)</span></div>
+            <div class="flex items-center gap-2 text-xs"><div style="width: 10px; height: 10px; border-radius: 50%; background: #8b5cf6;"></div><span class="text-slate-400">기타(3)</span></div>
+          </div>
+        </div>
+
+        <!-- Manager Budget -->
+        <div class="glass rounded-2xl p-4">
+          <h3 class="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">👥 담당자별 예산 (억원)</h3>
+          <canvas id="managerChart" height="180"></canvas>
+        </div>
+      </div>
+
+      <!-- Projects & Schedule -->
+      <div class="grid grid-cols-1 lg-grid-cols-2 gap-4">
+        <!-- Projects -->
+        <div class="glass rounded-2xl p-4">
+          <h3 class="text-sm font-semibold text-slate-300 mb-4 flex items-center gap-2">🏗️ 대형 인프라 진행현황</h3>
+          <div class="space-y-3" id="projectsList"></div>
+        </div>
+
+        <!-- Schedule & Risks -->
+        <div class="space-y-4">
+          <div class="glass rounded-2xl p-4">
+            <h3 class="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">📅 주요 일정</h3>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 text-sm"><div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div><span class="text-slate-500 w-12">11/27</span><span class="text-slate-300">SDDC 기술협상 완료</span></div>
+              <div class="flex items-center gap-3 text-sm"><div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div><span class="text-slate-500 w-12">11/27</span><span class="text-slate-300">디지털OASIS 입찰공고</span></div>
+              <div class="flex items-center gap-3 text-sm"><div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div><span class="text-slate-500 w-12">11/29</span><span class="text-slate-300">AI통합관제 선정위원회</span></div>
+              <div class="flex items-center gap-3 text-sm"><div class="w-2 h-2 rounded-full bg-amber-500"></div><span class="text-slate-500 w-12">12/01</span><span class="text-slate-300">SDDC 계약 체결</span></div>
+              <div class="flex items-center gap-3 text-sm"><div class="w-2 h-2 rounded-full bg-slate-700"></div><span class="text-slate-500 w-12">12/15</span><span class="text-slate-300">OASIS SPOT 부지 승인</span></div>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-4">
+            <h3 class="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">⚠️ 리스크 현황</h3>
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-sm"><span class="text-slate-300">예산 집행 지연</span><span class="badge bg-red-500 text-white">심각</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-slate-300">장비 납기 지연</span><span class="badge bg-orange-500 text-white">높음</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-slate-300">기술협상 지연</span><span class="badge bg-orange-500 text-white">높음</span></div>
+              <div class="flex items-center justify-between text-sm"><span class="text-slate-300">부지 승인 지연</span><span class="badge bg-yellow-500" style="color: #000;">중간</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trend Chart -->
+      <div class="glass rounded-2xl p-4">
+        <h3 class="text-sm font-semibold text-slate-300 mb-3 flex items-center gap-2">📈 자산 증가 추이 및 예측</h3>
+        <canvas id="trendChart" height="100"></canvas>
+      </div>
+    </div>
+
+    <!-- Assets Tab -->
+    <div id="content-assets" class="tab-content hidden space-y-5">
+      <div class="glass rounded-2xl p-4">
+        <h3 class="text-sm font-semibold text-slate-300 mb-4">🚀 신규 도입 예정 자산</h3>
+        <div class="overflow-x-auto">
+          <table class="text-sm">
+            <thead>
+              <tr>
+                <th class="text-left">품목</th>
+                <th class="text-center">수량</th>
+                <th class="text-right">금액</th>
+                <th class="text-center">상태</th>
+                <th class="text-center">우선순위</th>
+              </tr>
+            </thead>
+            <tbody id="assetsTable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 lg-grid-cols-4 gap-4" id="categoryCards"></div>
+    </div>
+
+    <!-- Projects Tab -->
+    <div id="content-projects" class="tab-content hidden space-y-4"></div>
+
+    <!-- Budget Tab -->
+    <div id="content-budget" class="tab-content hidden space-y-5">
+      <div class="grid grid-cols-3 gap-4">
+        <div class="glass rounded-2xl p-5 text-center">
+          <div class="text-slate-400 text-sm mb-2">총 예산</div>
+          <div class="text-3xl font-bold text-blue-400">₩176억</div>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+          <div class="text-slate-400 text-sm mb-2">집행액</div>
+          <div class="text-3xl font-bold text-emerald-400">₩20.9억</div>
+        </div>
+        <div class="glass rounded-2xl p-5 text-center">
+          <div class="text-slate-400 text-sm mb-2">잔액</div>
+          <div class="text-3xl font-bold text-amber-400">₩155억</div>
+        </div>
+      </div>
+
+      <div class="glass rounded-2xl p-4">
+        <h3 class="text-sm font-semibold text-slate-300 mb-4">담당자별 관리 예산</h3>
+        <canvas id="budgetChart" height="150"></canvas>
+      </div>
+
+      <div class="card-warning rounded-2xl p-5">
+        <h3 class="font-semibold text-red-400 mb-4 flex items-center gap-2">🔔 4분기 긴급 집행 계획</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between"><span class="text-slate-300">12월 1주: SDDC 선금</span><span class="font-bold text-white">₩8억</span></div>
+          <div class="flex justify-between"><span class="text-slate-300">12월 2주: 디지털OASIS 선금</span><span class="font-bold text-white">₩7.5억</span></div>
+          <div class="flex justify-between"><span class="text-slate-300">12월 3주: AI통합관제 선금</span><span class="font-bold text-white">₩4.8억</span></div>
+          <div class="flex justify-between"><span class="text-slate-300">12월 말: 장비발주 선금</span><span class="font-bold text-white">₩5억</span></div>
+          <div style="border-top: 1px solid rgba(239, 68, 68, 0.3); padding-top: 12px; margin-top: 12px;" class="flex justify-between font-bold">
+            <span class="text-red-300">4분기 목표 집행액</span>
+            <span class="text-red-400 text-lg">₩26억</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-6 text-center text-xs text-slate-500">
+      <p>아산시 강소형 스마트시티 구축사업 | 제일엔지니어링 PMO | 관리자: Danny</p>
+      <p class="mt-1">Slack #자산관리대장 연동 | 5시간 주기 자동 동기화</p>
+    </div>
+  </div>
+
+  <script>
+    // Data
+    var projects = [
+      { name: 'SDDC Platform', budget: 27, status: '기술협상', progress: 60, manager: '이성호', color: '#F59E0B' },
+      { name: '유무선 네트워크', budget: 8, status: '계약완료', progress: 100, manager: '이성호', color: '#10B981' },
+      { name: '디지털OASIS 정보관리', budget: 25, status: '입찰준비', progress: 30, manager: '임혁', color: '#EF4444' },
+      { name: 'AI통합관제 플랫폼', budget: 16, status: '업체선정', progress: 50, manager: '김주용', color: '#F59E0B' },
+      { name: '디지털OASIS SPOT', budget: 35, status: '부지승인', progress: 40, manager: '임혁', color: '#F59E0B' }
+    ];
+
+    var newAssets = [
+      { name: '서버랙 (펜디급)', qty: 4, amount: 2000, status: '발주예정', priority: 'high' },
+      { name: '네트워크랙', qty: 1, amount: 500, status: '발주예정', priority: 'high' },
+      { name: 'POE 스위치', qty: 4, amount: 800, status: '설계완료', priority: 'medium' },
+      { name: '5GHz WiFi AP', qty: 26, amount: 5200, status: '발주예정', priority: 'medium' },
+      { name: '스마트폴', qty: 5, amount: 15000, status: '설계진행', priority: 'medium' },
+      { name: 'ESS (에너지저장)', qty: 1, amount: 5000, status: '계획중', priority: 'low' }
+    ];
+
+    var categories = [
+      { name: '영상음향장비', value: 29, amount: 1450, color: '#3B82F6', icon: '🎬' },
+      { name: '전시장비', value: 6, amount: 245, color: '#10B981', icon: '🖼️' },
+      { name: '네트워크장비', value: 6, amount: 157, color: '#F59E0B', icon: '📶' },
+      { name: '기타장비', value: 3, amount: 69, color: '#8B5CF6', icon: '📦' }
+    ];
+
+    // Tab switching
+    function showTab(tabId) {
+      var contents = document.querySelectorAll('.tab-content');
+      for (var i = 0; i < contents.length; i++) {
+        contents[i].classList.add('hidden');
+      }
+      var btns = document.querySelectorAll('.tab-btn');
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.remove('active');
+      }
+      document.getElementById('content-' + tabId).classList.remove('hidden');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    // Render projects list
+    function renderProjectsList() {
+      var container = document.getElementById('projectsList');
+      if (!container) return;
+      
+      var html = '';
+      for (var i = 0; i < projects.length; i++) {
+        var p = projects[i];
+        html += '<div style="background: rgba(51, 65, 85, 0.3); border-radius: 12px; padding: 12px;">' +
+          '<div class="flex items-center justify-between mb-2">' +
+            '<div class="font-medium text-sm">' + p.name + '</div>' +
+            '<span class="badge-status" style="background: ' + p.color + '30; color: ' + p.color + '">' + p.status + '</span>' +
+          '</div>' +
+          '<div class="flex items-center gap-2 mb-2">' +
+            '<div class="progress-bar" style="flex: 1; height: 8px;">' +
+              '<div class="progress-fill" style="width: ' + p.progress + '%; background: ' + p.color + ';"></div>' +
+            '</div>' +
+            '<span class="text-xs text-slate-400">' + p.progress + '%</span>' +
+          '</div>' +
+          '<div class="flex items-center justify-between text-xs text-slate-500">' +
+            '<span>₩' + p.budget + '억</span>' +
+            '<span>' + p.manager + '</span>' +
+          '</div>' +
+        '</div>';
+      }
+      container.innerHTML = html;
+    }
+
+    // Render projects detail
+    function renderProjectsDetail() {
+      var container = document.getElementById('content-projects');
+      if (!container) return;
+      
+      var html = '';
+      for (var i = 0; i < projects.length; i++) {
+        var p = projects[i];
+        html += '<div class="glass rounded-2xl p-5">' +
+          '<div class="flex items-start justify-between mb-4">' +
+            '<div>' +
+              '<h3 class="font-semibold text-lg">' + p.name + '</h3>' +
+              '<p class="text-sm text-slate-400">담당: ' + p.manager + '</p>' +
+            '</div>' +
+            '<div class="text-right">' +
+              '<div class="text-2xl font-bold" style="color: ' + p.color + '">₩' + p.budget + '억</div>' +
+              '<span class="badge-status" style="background: ' + p.color + '20; color: ' + p.color + '">' + p.status + '</span>' +
+            '</div>' +
+          '</div>' +
+          '<div class="flex items-center gap-3">' +
+            '<div class="progress-bar" style="flex: 1; height: 16px;">' +
+              '<div class="progress-fill" style="width: ' + p.progress + '%; background: ' + p.color + ';"></div>' +
+            '</div>' +
+            '<span class="text-sm font-bold" style="color: ' + p.color + '">' + p.progress + '%</span>' +
+          '</div>' +
+        '</div>';
+      }
+      container.innerHTML = html;
+    }
+
+    // Render assets table
+    function renderAssets() {
+      var tbody = document.getElementById('assetsTable');
+      if (!tbody) return;
+      
+      var html = '';
+      for (var i = 0; i < newAssets.length; i++) {
+        var a = newAssets[i];
+        var priorityStyle = '';
+        var priorityText = '';
+        if (a.priority === 'high') {
+          priorityStyle = 'background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3);';
+          priorityText = '긴급';
+        } else if (a.priority === 'medium') {
+          priorityStyle = 'background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);';
+          priorityText = '높음';
+        } else {
+          priorityStyle = 'background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3);';
+          priorityText = '보통';
+        }
+        
+        html += '<tr>' +
+          '<td class="font-medium">' + a.name + '</td>' +
+          '<td class="text-center">' + a.qty + '</td>' +
+          '<td class="text-right">₩' + a.amount.toLocaleString() + '만</td>' +
+          '<td class="text-center"><span class="badge" style="background: #334155; color: #cbd5e1;">' + a.status + '</span></td>' +
+          '<td class="text-center"><span class="badge" style="' + priorityStyle + '">' + priorityText + '</span></td>' +
+        '</tr>';
+      }
+      tbody.innerHTML = html;
+    }
+
+    // Render category cards
+    function renderCategoryCards() {
+      var container = document.getElementById('categoryCards');
+      if (!container) return;
+      
+      var html = '';
+      for (var i = 0; i < categories.length; i++) {
+        var c = categories[i];
+        var widthPercent = (c.value / 44) * 100;
+        
+        html += '<div class="glass rounded-2xl p-4">' +
+          '<div class="flex items-center gap-3 mb-3">' +
+            '<div class="flex items-center justify-center text-xl" style="width: 40px; height: 40px; border-radius: 12px; background: ' + c.color + '20">' + c.icon + '</div>' +
+            '<div>' +
+              '<div class="font-medium text-sm">' + c.name + '</div>' +
+              '<div class="text-xs text-slate-400">' + c.value + '개</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="text-xl font-bold" style="color: ' + c.color + '">₩' + c.amount + '만</div>' +
+          '<div class="progress-bar mt-2" style="height: 8px;">' +
+            '<div class="progress-fill" style="width: ' + widthPercent + '%; background: ' + c.color + ';"></div>' +
+          '</div>' +
+        '</div>';
+      }
+      container.innerHTML = html;
+    }
+
+    // Initialize Charts
+    function initCharts() {
+      // Category Pie Chart
+      var categoryCtx = document.getElementById('categoryChart');
+      if (categoryCtx) {
+        new Chart(categoryCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['영상음향', '전시', '네트워크', '기타'],
+            datasets: [{
+              data: [29, 6, 6, 3],
+              backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            cutout: '60%',
+            plugins: { legend: { display: false } }
+          }
+        });
+      }
+
+      // Manager Chart
+      var managerCtx = document.getElementById('managerChart');
+      if (managerCtx) {
+        new Chart(managerCtx, {
+          type: 'bar',
+          data: {
+            labels: ['임혁', '이성호', '김주용', '함정영'],
+            datasets: [{
+              data: [87, 40, 34, 10],
+              backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
+              borderRadius: 6
+            }]
+          },
+          options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+              y: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+            }
+          }
+        });
+      }
+
+      // Trend Chart
+      var trendCtx = document.getElementById('trendChart');
+      if (trendCtx) {
+        new Chart(trendCtx, {
+          type: 'line',
+          data: {
+            labels: ['25.01', '25.06', '25.11', '25.12', '26.03', '26.06'],
+            datasets: [{
+              label: '자산 수',
+              data: [44, 44, 44, 85, 120, 150],
+              borderColor: '#3B82F6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              fill: true,
+              tension: 0.3,
+              yAxisID: 'y'
+            }, {
+              label: '가치(백만)',
+              data: [19, 19, 19, 3500, 15000, 18000],
+              borderColor: '#10B981',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              fill: true,
+              tension: 0.3,
+              yAxisID: 'y1'
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: '#94a3b8' } } },
+            scales: {
+              x: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+              y: { position: 'left', grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+              y1: { position: 'right', grid: { display: false }, ticks: { color: '#94a3b8' } }
+            }
+          }
+        });
+      }
+
+      // Budget Chart
+      var budgetCtx = document.getElementById('budgetChart');
+      if (budgetCtx) {
+        new Chart(budgetCtx, {
+          type: 'bar',
+          data: {
+            labels: ['임혁', '이성호', '김주용', '함정영'],
+            datasets: [{
+              data: [87, 40, 34, 10],
+              backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+              y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } }
+            }
+          }
+        });
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      renderProjectsList();
+      renderProjectsDetail();
+      renderAssets();
+      renderCategoryCards();
+      initCharts();
+    });
+  </script>
+</body>
+</html>
