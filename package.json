@@ -1,0 +1,20 @@
+{
+  "name": "asan-asset-management",
+  "version": "3.1.0",
+  "description": "아산시 스마트시티 자산관리 대시보드 - Notion & GitHub 자동 연동",
+  "scripts": {
+    "sync": "node scripts/sync-notion-data.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.2.14"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leesungho-ai/Asan-asset-management"
+  },
+  "author": "Danny (제일엔지니어링 PMO)",
+  "license": "MIT"
+}
