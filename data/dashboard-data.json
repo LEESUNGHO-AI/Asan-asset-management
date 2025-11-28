@@ -1,0 +1,46 @@
+{
+  "syncInfo": {
+    "lastSync": "2025-11-28T17:30:00+09:00",
+    "source": "Notion API - 자산관리 마스터 DB",
+    "database": "2aa50aa9577d81ee9cd0e7e63b3fdf25",
+    "assetCount": 85,
+    "status": "success",
+    "version": "3.0"
+  },
+  "summary": {
+    "totalAssets": 85,
+    "operatingAssets": 44,
+    "pendingAssets": 41,
+    "totalValue": 15219212350,
+    "operatingValue": 19212350,
+    "pendingValue": 15200000000,
+    "utilizationRate": 100,
+    "budgetExecutionRate": 11.9
+  },
+  "projects": [
+    {"name": "SDDC Platform 구축", "budget": "27억", "budgetAmount": 2700000000, "status": "기술협상", "progress": 65, "manager": "이성호"},
+    {"name": "유무선 네트워크", "budget": "8억", "budgetAmount": 800000000, "status": "계약완료", "progress": 100, "manager": "이성호"},
+    {"name": "디지털OASIS 정보관리", "budget": "25억", "budgetAmount": 2500000000, "status": "입찰준비", "progress": 40, "manager": "임혁"},
+    {"name": "AI통합관제 플랫폼", "budget": "16억", "budgetAmount": 1600000000, "status": "업체선정", "progress": 35, "manager": "김주용"},
+    {"name": "디지털OASIS SPOT", "budget": "35억", "budgetAmount": 3500000000, "status": "부지승인", "progress": 25, "manager": "임혁"}
+  ],
+  "newAssets": [
+    {"name": "서버랙 (펜디급)", "quantity": 4, "price": "₩20,000,000", "status": "발주예정", "priority": "high"},
+    {"name": "네트워크랙", "quantity": 1, "price": "₩5,000,000", "status": "발주예정", "priority": "high"},
+    {"name": "POE 스위치", "quantity": 4, "price": "₩8,000,000", "status": "설계완료", "priority": "high"},
+    {"name": "5GHz WiFi AP", "quantity": 26, "price": "₩52,000,000", "status": "발주예정", "priority": "high"},
+    {"name": "스마트폴", "quantity": 5, "price": "₩150,000,000", "status": "설계진행", "priority": "medium"},
+    {"name": "ESS (에너지저장)", "quantity": 1, "price": "₩50,000,000", "status": "계획중", "priority": "medium"}
+  ],
+  "categories": [
+    {"name": "영상음향장비", "count": 29, "amount": 14503570, "percentage": 75.5, "color": "#3b82f6"},
+    {"name": "전시장비", "count": 6, "amount": 2446300, "percentage": 12.7, "color": "#10b981"},
+    {"name": "네트워크장비", "count": 6, "amount": 1572480, "percentage": 8.2, "color": "#8b5cf6"},
+    {"name": "기타장비", "count": 3, "amount": 690000, "percentage": 3.6, "color": "#6b7280"}
+  ],
+  "managers": [
+    {"name": "임혁", "assetCount": 23, "assetValue": 5822350},
+    {"name": "이성호", "assetCount": 15, "assetValue": 10563000},
+    {"name": "김주용", "assetCount": 6, "assetValue": 2827000}
+  ]
+}

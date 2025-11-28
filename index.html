@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 아산시 통합자산관리 대시보드</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+        .header {
+            background: linear-gradient(90deg, rgba(59,130,246,0.2), rgba(139,92,246,0.2));
+            padding: 20px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .header-info {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .summary-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+        .summary-card.green { border-left: 4px solid #10b981; }
+        .summary-card.yellow { border-left: 4px solid #f59e0b; }
+        .summary-card.purple { border-left: 4px solid #8b5cf6; }
+        .summary-card.red { border-left: 4px solid #ef4444; }
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+        }
+        .summary-card .label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-top: 5px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            border-color: transparent;
+        }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .section {
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #60a5fa;
+        }
+        
+        .table-container { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        th {
+            background: rgba(59,130,246,0.2);
+            color: #60a5fa;
+            font-weight: 600;
+        }
+        tr:hover { background: rgba(255,255,255,0.03); }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-green { background: rgba(16,185,129,0.2); color: #10b981; }
+        .status-yellow { background: rgba(245,158,11,0.2); color: #f59e0b; }
+        .status-red { background: rgba(239,68,68,0.2); color: #ef4444; }
+        .status-purple { background: rgba(139,92,246,0.2); color: #a78bfa; }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .chart-box {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .sync-info {
+            text-align: center;
+            padding: 15px;
+            background: rgba(16,185,129,0.1);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .sync-info .time { color: #10b981; font-weight: bold; }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.4rem; }
+            .summary-card .value { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 아산시 통합자산관리 대시보드</h1>
+        <div class="header-info">
+            Digital OASIS - Smart Asset Management Platform v3.0<br>
+            아산시 강소형 스마트시티 구축사업 | 제일엔지니어링 PMO | 관리자: Danny
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sync-info">
+            🔄 마지막 동기화: <span class="time" id="lastSync">로딩중...</span> | 
+            총 자산: <span id="totalAssets">-</span>개 | 
+            Notion DB 실시간 연동
+        </div>
+        
+        <div class="summary-grid">
+            <div class="summary-card green">
+                <div class="value" id="operatingAssets">-</div>
+                <div class="label">📦 운영 자산</div>
+            </div>
+            <div class="summary-card yellow">
+                <div class="value" id="pendingAssets">-</div>
+                <div class="label">🚀 도입 예정</div>
+            </div>
+            <div class="summary-card purple">
+                <div class="value" id="projectCount">-</div>
+                <div class="label">🏗️ 대형 프로젝트</div>
+            </div>
+            <div class="summary-card red">
+                <div class="value" id="budgetRate">-</div>
+                <div class="label">📊 예산 집행률</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('overview')">📊 종합현황</button>
+            <button class="tab-btn" onclick="showTab('projects')">🏗️ 프로젝트</button>
+            <button class="tab-btn" onclick="showTab('newassets')">🚀 신규자산</button>
+            <button class="tab-btn" onclick="showTab('categories')">📦 카테고리</button>
+        </div>
+        
+        <div id="overview" class="tab-content active">
+            <div class="chart-container">
+                <div class="section chart-box">
+                    <h2>📊 카테고리별 자산 분포</h2>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="section chart-box">
+                    <h2>👤 담당자별 자산 현황</h2>
+                    <canvas id="managerChart"></canvas>
+                </div>
+            </div>
+            <div class="section">
+                <h2>🏗️ 대형 인프라 프로젝트 진행 현황</h2>
+                <div class="table-container">
+                    <table id="projectsTable">
+                        <thead>
+                            <tr>
+                                <th>프로젝트명</th>
+                                <th>예산</th>
+                                <th>담당자</th>
+                                <th>상태</th>
+                                <th>진행률</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="projects" class="tab-content">
+            <div class="section">
+                <h2>🏗️ 대형 인프라 프로젝트 상세</h2>
+                <div class="table-container">
+                    <table id="projectsDetailTable">
+                        <thead>
+                            <tr>
+                                <th>프로젝트명</th>
+                                <th>예산</th>
+                                <th>담당자</th>
+                                <th>상태</th>
+                                <th>진행률</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="newassets" class="tab-content">
+            <div class="section">
+                <h2>🚀 신규 도입 예정 자산</h2>
+                <div class="table-container">
+                    <table id="newAssetsTable">
+                        <thead>
+                            <tr>
+                                <th>품목</th>
+                                <th>수량</th>
+                                <th>예상금액</th>
+                                <th>상태</th>
+                                <th>우선순위</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div id="categories" class="tab-content">
+            <div class="section">
+                <h2>📦 카테고리별 자산 현황</h2>
+                <div class="table-container">
+                    <table id="categoriesTable">
+                        <thead>
+                            <tr>
+                                <th>분류</th>
+                                <th>수량</th>
+                                <th>금액</th>
+                                <th>비중</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let dashboardData = null;
+        let categoryChart = null;
+        let managerChart = null;
+        
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        function getStatusClass(status) {
+            if (status.includes('완료') || status.includes('사용중')) return 'status-green';
+            if (status.includes('진행') || status.includes('협상') || status.includes('예정')) return 'status-yellow';
+            if (status.includes('준비') || status.includes('선정')) return 'status-purple';
+            return 'status-yellow';
+        }
+        
+        function getPriorityClass(priority) {
+            if (priority === 'high') return 'status-red';
+            if (priority === 'medium') return 'status-yellow';
+            return 'status-green';
+        }
+        
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ko-KR').format(num);
+        }
+        
+        function renderSummary(data) {
+            document.getElementById('lastSync').textContent = new Date(data.syncInfo.lastSync).toLocaleString('ko-KR');
+            document.getElementById('totalAssets').textContent = data.summary.totalAssets;
+            document.getElementById('operatingAssets').textContent = data.summary.operatingAssets + '개';
+            document.getElementById('pendingAssets').textContent = data.summary.pendingAssets + '개';
+            document.getElementById('projectCount').textContent = data.projects.length + '개';
+            document.getElementById('budgetRate').textContent = data.summary.budgetExecutionRate + '%';
+        }
+        
+        function renderProjects(data) {
+            const tbody1 = document.querySelector('#projectsTable tbody');
+            const tbody2 = document.querySelector('#projectsDetailTable tbody');
+            const html = data.projects.map(p => `
+                <tr>
+                    <td>${p.name}</td>
+                    <td>${p.budget}</td>
+                    <td>${p.manager}</td>
+                    <td><span class="status-badge ${getStatusClass(p.status)}">${p.status}</span></td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${p.progress}%"></div>
+                        </div>
+                        <span style="font-size:0.8rem; color:#94a3b8;">${p.progress}%</span>
+                    </td>
+                </tr>
+            `).join('');
+            tbody1.innerHTML = html;
+            tbody2.innerHTML = html;
+        }
+        
+        function renderNewAssets(data) {
+            const tbody = document.querySelector('#newAssetsTable tbody');
+            tbody.innerHTML = data.newAssets.map(a => `
+                <tr>
+                    <td>${a.name}</td>
+                    <td>${a.quantity}${a.quantity > 1 ? '대' : '식'}</td>
+                    <td>${a.price}</td>
+                    <td><span class="status-badge ${getStatusClass(a.status)}">${a.status}</span></td>
+                    <td><span class="status-badge ${getPriorityClass(a.priority)}">${a.priority === 'high' ? '긴급' : a.priority === 'medium' ? '높음' : '보통'}</span></td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderCategories(data) {
+            const tbody = document.querySelector('#categoriesTable tbody');
+            tbody.innerHTML = data.categories.map(c => `
+                <tr>
+                    <td><span style="display:inline-block;width:12px;height:12px;background:${c.color};border-radius:50%;margin-right:8px;"></span>${c.name}</td>
+                    <td>${c.count}개</td>
+                    <td>₩${formatNumber(c.amount)}</td>
+                    <td>${c.percentage}%</td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderCharts(data) {
+            const ctx1 = document.getElementById('categoryChart').getContext('2d');
+            if (categoryChart) categoryChart.destroy();
+            categoryChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: data.categories.map(c => c.name),
+                    datasets: [{
+                        data: data.categories.map(c => c.count),
+                        backgroundColor: data.categories.map(c => c.color),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#94a3b8' } }
+                    }
+                }
+            });
+            
+            const ctx2 = document.getElementById('managerChart').getContext('2d');
+            if (managerChart) managerChart.destroy();
+            managerChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: data.managers.map(m => m.name),
+                    datasets: [{
+                        label: '자산 수',
+                        data: data.managers.map(m => m.assetCount),
+                        backgroundColor: ['#8b5cf6', '#3b82f6', '#10b981'],
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } }
+                    }
+                }
+            });
+        }
+        
+        async function loadData() {
+            try {
+                const response = await fetch('./data/dashboard-data.json?' + Date.now());
+                dashboardData = await response.json();
+                renderSummary(dashboardData);
+                renderProjects(dashboardData);
+                renderNewAssets(dashboardData);
+                renderCategories(dashboardData);
+                renderCharts(dashboardData);
+            } catch (error) {
+                console.error('데이터 로드 실패:', error);
+                document.getElementById('lastSync').textContent = '데이터 로드 실패';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
