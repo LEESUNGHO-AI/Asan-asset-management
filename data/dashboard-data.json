@@ -1,46 +1,68 @@
 {
   "syncInfo": {
-    "lastSync": "2025-11-28T17:30:00+09:00",
-    "source": "Notion API - 자산관리 마스터 DB",
+    "lastSync": "2025-11-28T18:00:00+09:00",
+    "source": "Notion 자산관리 마스터 DB (직접 연동)",
     "database": "2aa50aa9577d81ee9cd0e7e63b3fdf25",
-    "assetCount": 85,
-    "status": "success",
-    "version": "3.0"
+    "totalAssets": 52,
+    "status": "verified",
+    "version": "3.1"
   },
   "summary": {
-    "totalAssets": 85,
-    "operatingAssets": 44,
-    "pendingAssets": 41,
-    "totalValue": 15219212350,
-    "operatingValue": 19212350,
-    "pendingValue": 15200000000,
-    "utilizationRate": 100,
-    "budgetExecutionRate": 11.9
+    "totalAssets": 52,
+    "totalValue": 26063240,
+    "activeAssets": 48,
+    "pendingAssets": 4,
+    "utilizationRate": 92.3
   },
-  "projects": [
-    {"name": "SDDC Platform 구축", "budget": "27억", "budgetAmount": 2700000000, "status": "기술협상", "progress": 65, "manager": "이성호"},
-    {"name": "유무선 네트워크", "budget": "8억", "budgetAmount": 800000000, "status": "계약완료", "progress": 100, "manager": "이성호"},
-    {"name": "디지털OASIS 정보관리", "budget": "25억", "budgetAmount": 2500000000, "status": "입찰준비", "progress": 40, "manager": "임혁"},
-    {"name": "AI통합관제 플랫폼", "budget": "16억", "budgetAmount": 1600000000, "status": "업체선정", "progress": 35, "manager": "김주용"},
-    {"name": "디지털OASIS SPOT", "budget": "35억", "budgetAmount": 3500000000, "status": "부지승인", "progress": 25, "manager": "임혁"}
-  ],
-  "newAssets": [
-    {"name": "서버랙 (펜디급)", "quantity": 4, "price": "₩20,000,000", "status": "발주예정", "priority": "high"},
-    {"name": "네트워크랙", "quantity": 1, "price": "₩5,000,000", "status": "발주예정", "priority": "high"},
-    {"name": "POE 스위치", "quantity": 4, "price": "₩8,000,000", "status": "설계완료", "priority": "high"},
-    {"name": "5GHz WiFi AP", "quantity": 26, "price": "₩52,000,000", "status": "발주예정", "priority": "high"},
-    {"name": "스마트폴", "quantity": 5, "price": "₩150,000,000", "status": "설계진행", "priority": "medium"},
-    {"name": "ESS (에너지저장)", "quantity": 1, "price": "₩50,000,000", "status": "계획중", "priority": "medium"}
-  ],
   "categories": [
-    {"name": "영상음향장비", "count": 29, "amount": 14503570, "percentage": 75.5, "color": "#3b82f6"},
-    {"name": "전시장비", "count": 6, "amount": 2446300, "percentage": 12.7, "color": "#10b981"},
-    {"name": "네트워크장비", "count": 6, "amount": 1572480, "percentage": 8.2, "color": "#8b5cf6"},
-    {"name": "기타장비", "count": 3, "amount": 690000, "percentage": 3.6, "color": "#6b7280"}
+    {"name": "영상음향장비", "count": 24, "amount": 8500000, "percentage": 46.2, "color": "#3b82f6"},
+    {"name": "기타장비", "count": 12, "amount": 22237600, "percentage": 23.1, "color": "#6b7280"},
+    {"name": "IT장비", "count": 8, "amount": 1200000, "percentage": 15.4, "color": "#f59e0b"},
+    {"name": "네트워크장비", "count": 5, "amount": 800000, "percentage": 9.6, "color": "#8b5cf6"},
+    {"name": "전시장비", "count": 3, "amount": 500000, "percentage": 5.8, "color": "#10b981"}
   ],
   "managers": [
-    {"name": "임혁", "assetCount": 23, "assetValue": 5822350},
-    {"name": "이성호", "assetCount": 15, "assetValue": 10563000},
-    {"name": "김주용", "assetCount": 6, "assetValue": 2827000}
-  ]
+    {"name": "임혁", "role": "계약/행정", "assetCount": 20, "assetValue": 5800000, "percentage": 38.5},
+    {"name": "이성호", "role": "기술/인프라", "assetCount": 18, "assetValue": 3200000, "percentage": 34.6},
+    {"name": "김주용", "role": "사업총괄 (PM)", "assetCount": 14, "assetValue": 23500000, "percentage": 26.9}
+  ],
+  "locations": [
+    {"name": "이노베이션센터 1층", "count": 18, "percentage": 34.6},
+    {"name": "이노베이션센터 2층", "count": 22, "percentage": 42.3},
+    {"name": "이노베이션센터 3층", "count": 6, "percentage": 11.5},
+    {"name": "이노베이션센터 4층", "count": 2, "percentage": 3.8},
+    {"name": "전시관", "count": 2, "percentage": 3.8},
+    {"name": "미배치", "count": 2, "percentage": 3.8}
+  ],
+  "assets": [
+    {"code": "AST-17", "name": "안테나분배기", "model": "EW-DASA", "manufacturer": "Sennheiser", "category": "영상음향장비", "price": 1129640, "status": "사용중", "location": "이노베이션센터 1층", "manager": "임혁", "purchaseDate": "2025-03-27", "warranty": "2028-03-27"},
+    {"code": "AST-20", "name": "스피커 (PMP-12)", "model": "PMP-12", "manufacturer": "젠프로", "category": "영상음향장비", "price": 2400000, "status": "사용중", "location": "이노베이션센터 1층", "manager": "임혁", "purchaseDate": "2025-03-27", "warranty": "2028-03-27", "note": "400W, 수량 2개"},
+    {"code": "AST-26", "name": "모니터암 (MSS1H)", "model": "MSS1H", "manufacturer": "카멜인터내셔널", "category": "IT장비", "price": 49000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "이성호", "purchaseDate": "2025-04-22", "note": "17~45형 모니터용, 수량 17개"},
+    {"code": "AST-27", "name": "에어컨 실외기", "model": "AM180AXVHHH1", "manufacturer": "삼성전자", "category": "기타장비", "price": 21018800, "status": "사용중", "location": "이노베이션센터 1층", "manager": "김주용", "purchaseDate": "2025-01-14", "warranty": "2028-01-14", "note": "수량 2대"},
+    {"code": "AST-29", "name": "에어컨 실내기 4Way 36평형", "model": "AM130BN4DBH1", "manufacturer": "삼성전자", "category": "기타장비", "price": 910800, "status": "사용중", "location": "이노베이션센터 2층", "manager": "김주용", "purchaseDate": "2025-01-14", "warranty": "2028-01-14", "note": "36평형, 수량 5대"},
+    {"code": "AST-31", "name": "전기온수기 (G15U)", "model": "G15U", "manufacturer": "귀뚜라", "category": "기타장비", "price": 308000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "김주용", "purchaseDate": "2024-12-30", "note": "수량 3대"},
+    {"code": "AST-37", "name": "HDMI 무선 송수신기", "model": "NX-WHR30", "manufacturer": "NEXI", "category": "IT장비", "price": 247000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "이성호", "purchaseDate": "2025-04-22", "note": "4K@30Hz 지원, 수량 2세트"},
+    {"code": "AST-39", "name": "LED Controller (H5)", "model": "H5", "manufacturer": "NOVASTAR", "category": "전시장비", "price": null, "status": "사용중", "location": "이노베이션센터 1층", "manager": "김주용", "purchaseDate": "2025-07-28", "note": "HDMI 3 Input"},
+    {"code": "AST-48", "name": "Network Switch (SFC4100HP)", "model": "SFC4100HP", "manufacturer": "솔텍", "category": "네트워크장비", "price": null, "status": "사용중", "location": "이노베이션센터 1층", "manager": "이성호", "purchaseDate": "2025-07-11", "note": "24 Port POE"},
+    {"code": "AST-49", "name": "파워드 앰프 (EMX5)", "model": "EMX5", "manufacturer": "YAMAHA", "category": "영상음향장비", "price": null, "status": "사용중", "location": "이노베이션센터 1층", "manager": "임혁", "purchaseDate": "2025-07-11", "note": "630W"},
+    {"code": "AST-50", "name": "무선 리시버 & 마이크", "model": "GLXD24R-SM58", "manufacturer": "Shure", "category": "영상음향장비", "price": null, "status": "사용중", "location": "이노베이션센터 1층", "manager": "임혁", "purchaseDate": "2025-07-11", "note": "2.4GHz, 수량 2세트"},
+    {"code": "AST-52", "name": "무선 AP (Instant ON)", "model": "Instant ON", "manufacturer": "HP", "category": "네트워크장비", "price": null, "status": "사용중", "location": "이노베이션센터 1층", "manager": "이성호", "purchaseDate": "2025-07-11", "note": "PoE 지원"}
+  ],
+  "recentUpdates": [
+    {"date": "2025-11-28", "action": "Notion DB 동기화", "count": 52, "user": "Danny"},
+    {"date": "2025-11-28", "action": "CSV 일괄 업데이트", "count": 10, "user": "이성호"},
+    {"date": "2025-07-11", "action": "현대아이티 납품 등록", "count": 8, "user": "임혁"}
+  ],
+  "lifecycle": {
+    "운영": 48,
+    "등록": 2,
+    "점검": 1,
+    "대기중": 1
+  },
+  "statusSummary": {
+    "사용중": 48,
+    "대기중": 3,
+    "수리중": 0,
+    "폐기예정": 1
+  }
 }
