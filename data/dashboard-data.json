@@ -1,30 +1,217 @@
 {
   "syncInfo": {
-    "lastSync": "2025-11-28T09:00:00.000Z",
-    "source": "Notion API",
+    "lastSync": "2025-11-28T17:30:00+09:00",
+    "source": "Notion API - 자산관리 마스터 DB",
     "database": "2aa50aa9577d81ee9cd0e7e63b3fdf25",
-    "assetCount": 44,
-    "status": "success"
+    "assetCount": 85,
+    "status": "success",
+    "version": "3.0"
+  },
+  "summary": {
+    "totalAssets": 85,
+    "operatingAssets": 44,
+    "pendingAssets": 41,
+    "totalValue": 15219212350,
+    "operatingValue": 19212350,
+    "pendingValue": 15200000000,
+    "utilizationRate": 100,
+    "budgetExecutionRate": 11.9
   },
   "projects": [
-    { "name": "SDDC Platform", "budget": 27, "status": "기술협상", "progress": 65, "manager": "이성호", "color": "#F59E0B" },
-    { "name": "유무선 네트워크", "budget": 8, "status": "계약완료", "progress": 100, "manager": "이성호", "color": "#10B981" },
-    { "name": "디지털OASIS 정보관리", "budget": 25, "status": "기술협상", "progress": 70, "manager": "임혁", "color": "#EF4444" },
-    { "name": "AI통합관제 플랫폼", "budget": 16, "status": "협상준비", "progress": 30, "manager": "김주용", "color": "#F59E0B" },
-    { "name": "디지털OASIS SPOT", "budget": 35, "status": "부지협의", "progress": 25, "manager": "임혁", "color": "#F59E0B" }
+    {
+      "name": "SDDC Platform 구축",
+      "budget": "27억",
+      "budgetAmount": 2700000000,
+      "status": "기술협상",
+      "progress": 65,
+      "manager": "이성호",
+      "deadline": "2025.12",
+      "note": "2차 협상 완료 (11/19)"
+    },
+    {
+      "name": "유무선 네트워크",
+      "budget": "8억",
+      "budgetAmount": 800000000,
+      "status": "계약완료",
+      "progress": 100,
+      "manager": "이성호",
+      "deadline": "2026.03",
+      "note": "장비 발주 준비중"
+    },
+    {
+      "name": "디지털OASIS 정보관리",
+      "budget": "25억",
+      "budgetAmount": 2500000000,
+      "status": "입찰준비",
+      "progress": 40,
+      "manager": "임혁",
+      "deadline": "2026.06",
+      "note": "11/27 입찰공고 목표"
+    },
+    {
+      "name": "AI통합관제 플랫폼",
+      "budget": "16억",
+      "budgetAmount": 1600000000,
+      "status": "업체선정",
+      "progress": 35,
+      "manager": "김주용",
+      "deadline": "2026.06",
+      "note": "11/29 선정위원회"
+    },
+    {
+      "name": "디지털OASIS SPOT",
+      "budget": "35억",
+      "budgetAmount": 3500000000,
+      "status": "부지승인",
+      "progress": 25,
+      "manager": "임혁",
+      "deadline": "2026.12",
+      "note": "11월말 승인 예상"
+    }
   ],
   "newAssets": [
-    { "name": "서버랙 (펜디급)", "qty": 4, "amount": 2000, "status": "발주완료", "priority": "high" },
-    { "name": "네트워크랙", "qty": 1, "amount": 500, "status": "발주완료", "priority": "high" },
-    { "name": "POE 스위치", "qty": 4, "amount": 800, "status": "납품대기", "priority": "medium" },
-    { "name": "5GHz WiFi AP", "qty": 26, "amount": 5200, "status": "설치예정", "priority": "medium" },
-    { "name": "스마트폴", "qty": 5, "amount": 15000, "status": "부지협의", "priority": "medium" },
-    { "name": "ESS (에너지저장)", "qty": 1, "amount": 5000, "status": "사양검토", "priority": "low" }
+    {
+      "name": "서버랙 (펜디급)",
+      "quantity": 4,
+      "price": "₩20,000,000",
+      "priceAmount": 20000000,
+      "status": "발주예정",
+      "priority": "high",
+      "location": "B1F 전산실",
+      "deliveryTime": "2-4주"
+    },
+    {
+      "name": "네트워크랙",
+      "quantity": 1,
+      "price": "₩5,000,000",
+      "priceAmount": 5000000,
+      "status": "발주예정",
+      "priority": "high",
+      "location": "B1F 전산실",
+      "deliveryTime": "2-4주"
+    },
+    {
+      "name": "POE 스위치",
+      "quantity": 4,
+      "price": "₩8,000,000",
+      "priceAmount": 8000000,
+      "status": "설계완료",
+      "priority": "high",
+      "location": "현장센터",
+      "deliveryTime": "2-4주"
+    },
+    {
+      "name": "5GHz WiFi AP",
+      "quantity": 26,
+      "price": "₩52,000,000",
+      "priceAmount": 52000000,
+      "status": "발주예정",
+      "priority": "high",
+      "location": "전 구간",
+      "deliveryTime": "2-4주"
+    },
+    {
+      "name": "스마트폴",
+      "quantity": 5,
+      "price": "₩150,000,000",
+      "priceAmount": 150000000,
+      "status": "설계진행",
+      "priority": "medium",
+      "location": "도고면/배방읍",
+      "deliveryTime": "8-12주"
+    },
+    {
+      "name": "ESS (에너지저장시스템)",
+      "quantity": 1,
+      "price": "₩50,000,000",
+      "priceAmount": 50000000,
+      "status": "계획중",
+      "priority": "medium",
+      "location": "이노베이션센터",
+      "deliveryTime": "12주+"
+    }
   ],
   "categories": [
-    { "name": "영상음향장비", "value": 29, "amount": 1450, "color": "#3B82F6", "icon": "🎬" },
-    { "name": "전시장비", "value": 6, "amount": 245, "color": "#10B981", "icon": "🖼️" },
-    { "name": "네트워크장비", "value": 6, "amount": 157, "color": "#F59E0B", "icon": "📶" },
-    { "name": "기타장비", "value": 3, "amount": 69, "color": "#8B5CF6", "icon": "📦" }
+    {
+      "name": "영상음향장비",
+      "count": 29,
+      "amount": 14503570,
+      "percentage": 75.5,
+      "color": "#3b82f6"
+    },
+    {
+      "name": "전시장비",
+      "count": 6,
+      "amount": 2446300,
+      "percentage": 12.7,
+      "color": "#10b981"
+    },
+    {
+      "name": "네트워크장비",
+      "count": 6,
+      "amount": 1572480,
+      "percentage": 8.2,
+      "color": "#8b5cf6"
+    },
+    {
+      "name": "기타장비",
+      "count": 3,
+      "amount": 690000,
+      "percentage": 3.6,
+      "color": "#6b7280"
+    }
+  ],
+  "managers": [
+    {
+      "name": "임혁",
+      "role": "계약/행정",
+      "assetCount": 23,
+      "assetValue": 5822350,
+      "projects": ["디지털OASIS", "OASIS SPOT"],
+      "managedBudget": 8700000000
+    },
+    {
+      "name": "이성호",
+      "role": "기술/인프라",
+      "assetCount": 15,
+      "assetValue": 10563000,
+      "projects": ["SDDC Platform", "유무선 네트워크"],
+      "managedBudget": 4000000000
+    },
+    {
+      "name": "김주용",
+      "role": "사업총괄 (PM)",
+      "assetCount": 6,
+      "assetValue": 2827000,
+      "projects": ["AI통합관제", "이노베이션센터"],
+      "managedBudget": 3400000000
+    }
+  ],
+  "kpi": {
+    "assetRegistrationRate": { "target": 100, "current": 100, "status": "achieved" },
+    "assetUtilizationRate": { "target": 95, "current": 100, "status": "exceeded" },
+    "budgetExecutionRate": { "target": 95, "current": 11.9, "status": "critical" },
+    "contractCompletionRate": { "target": 100, "current": 84.6, "status": "inProgress" },
+    "maintenanceComplianceRate": { "target": 100, "current": 100, "status": "achieved" }
+  },
+  "assets": [
+    {"id": "AST-001", "name": "빔프로젝터 #1", "category": "영상음향장비", "price": 450000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "김주용"},
+    {"id": "AST-002", "name": "빔프로젝터 #2", "category": "영상음향장비", "price": 450000, "status": "사용중", "location": "이노베이션센터 3층", "manager": "김주용"},
+    {"id": "AST-003", "name": "영사용 스크린 #1", "category": "영상음향장비", "price": 180000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "임혁"},
+    {"id": "AST-004", "name": "영사용 스크린 #2", "category": "영상음향장비", "price": 180000, "status": "사용중", "location": "이노베이션센터 3층", "manager": "임혁"},
+    {"id": "AST-005", "name": "스피커 시스템", "category": "영상음향장비", "price": 320000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "임혁"},
+    {"id": "AST-006", "name": "파워앰프", "category": "영상음향장비", "price": 280000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "임혁"},
+    {"id": "AST-007", "name": "무선마이크 수신기 #1", "category": "영상음향장비", "price": 85000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "임혁"},
+    {"id": "AST-008", "name": "무선마이크 수신기 #2", "category": "영상음향장비", "price": 85000, "status": "사용중", "location": "이노베이션센터 2층", "manager": "임혁"},
+    {"id": "AST-011", "name": "서버랙 #1 (펜디급)", "category": "네트워크장비", "price": 5000000, "status": "대기중", "location": "이노베이션센터 1층", "manager": "이성호"},
+    {"id": "AST-012", "name": "POE 스위치 #1", "category": "네트워크장비", "price": 1200000, "status": "대기중", "location": "미배치", "manager": "이성호"},
+    {"id": "AST-013", "name": "ESS (에너지저장시스템)", "category": "기타장비", "price": 15000000, "status": "대기중", "location": "이노베이션센터 1층", "manager": "이성호"},
+    {"id": "AST-052", "name": "무선 AP (Instant ON)", "category": "네트워크장비", "price": 200000, "status": "사용중", "location": "이노베이션센터 1층", "manager": "이성호"},
+    {"id": "AST-053", "name": "Network Switch (SFC4100HP)", "category": "네트워크장비", "price": 350000, "status": "사용중", "location": "이노베이션센터 1층", "manager": "이성호"}
+  ],
+  "recentUpdates": [
+    {"date": "2025-11-28", "action": "CSV 일괄 업데이트", "count": 41, "user": "Danny"},
+    {"date": "2025-11-27", "action": "대시보드 v3.0 고도화", "count": 0, "user": "System"},
+    {"date": "2025-11-19", "action": "신규 자산 등록", "count": 3, "user": "이성호"}
   ]
 }
