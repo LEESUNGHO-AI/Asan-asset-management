@@ -1,0 +1,241 @@
+{
+  "syncInfo": {
+    "lastSync": "2025-11-28T09:57:00.000Z",
+    "source": "Notion API + Slack #자산관리대장",
+    "database": "2aa50aa9577d81ee9cd0e7e63b3fdf25",
+    "assetCount": 48,
+    "status": "success"
+  },
+  "projects": [
+    {
+      "name": "SDDC Platform 구축",
+      "budget": "27억",
+      "status": "기술협상",
+      "progress": 65,
+      "manager": "이성호"
+    },
+    {
+      "name": "유무선 네트워크",
+      "budget": "8억",
+      "status": "계약완료",
+      "progress": 100,
+      "manager": "이성호"
+    },
+    {
+      "name": "디지털OASIS",
+      "budget": "25억",
+      "status": "기술협상",
+      "progress": 70,
+      "manager": "임혁"
+    },
+    {
+      "name": "AI통합관제",
+      "budget": "16억",
+      "status": "협상준비",
+      "progress": 30,
+      "manager": "김주용"
+    },
+    {
+      "name": "OASIS SPOT",
+      "budget": "35억",
+      "status": "부지협의",
+      "progress": 25,
+      "manager": "임혁"
+    }
+  ],
+  "newAssets": [
+    {
+      "name": "서버랙 #1 (펜디급)",
+      "price": "₩5,000,000",
+      "status": "발주예정",
+      "priority": "high",
+      "manager": "이성호",
+      "location": "이노베이션센터 1층"
+    },
+    {
+      "name": "POE 스위치 #1",
+      "price": "₩1,200,000",
+      "status": "발주완료",
+      "priority": "high",
+      "manager": "이성호",
+      "location": "미배치"
+    },
+    {
+      "name": "ESS (에너지저장시스템)",
+      "price": "₩15,000,000",
+      "status": "사양검토",
+      "priority": "medium",
+      "manager": "이성호",
+      "location": "이노베이션센터 1층"
+    },
+    {
+      "name": "WiFi AP (26대)",
+      "price": "₩5,200,000",
+      "status": "설치예정",
+      "priority": "medium",
+      "manager": "이성호",
+      "location": "이노베이션센터 전층"
+    },
+    {
+      "name": "스마트폴 (5대)",
+      "price": "₩15,000,000",
+      "status": "부지협의",
+      "priority": "medium",
+      "manager": "임혁",
+      "location": "외부"
+    }
+  ],
+  "categories": [
+    {
+      "name": "영상음향",
+      "count": 29,
+      "color": "#3b82f6",
+      "items": ["빔프로젝터", "스크린", "스피커", "앰프", "무선마이크"]
+    },
+    {
+      "name": "전시장비",
+      "count": 6,
+      "color": "#10b981",
+      "items": ["키오스크", "사이니지", "LED 디스플레이"]
+    },
+    {
+      "name": "네트워크",
+      "count": 8,
+      "color": "#8b5cf6",
+      "items": ["서버랙", "POE스위치", "WiFi AP", "UTP케이블"]
+    },
+    {
+      "name": "IT장비",
+      "count": 2,
+      "color": "#f59e0b",
+      "items": ["서버", "NAS"]
+    },
+    {
+      "name": "기타",
+      "count": 3,
+      "color": "#6b7280",
+      "items": ["ESS", "UPS", "통신장비"]
+    }
+  ],
+  "assets": [
+    {
+      "id": "AST-014",
+      "name": "POE 스위치 #1",
+      "category": "네트워크장비",
+      "price": 1200000,
+      "status": "대기중",
+      "location": "미배치",
+      "manager": "이성호",
+      "project": "서비스 인프라"
+    },
+    {
+      "id": "AST-011",
+      "name": "서버랙 #1 (펜디급)",
+      "category": "네트워크장비",
+      "price": 5000000,
+      "status": "대기중",
+      "location": "이노베이션센터 1층",
+      "manager": "이성호",
+      "project": "서비스 인프라"
+    },
+    {
+      "id": "AST-013",
+      "name": "ESS (에너지저장시스템)",
+      "category": "기타장비",
+      "price": 15000000,
+      "status": "대기중",
+      "location": "이노베이션센터 1층",
+      "manager": "이성호",
+      "project": "공통"
+    },
+    {
+      "id": "AST-001",
+      "name": "빔프로젝터 #1",
+      "category": "영상음향장비",
+      "price": 450000,
+      "status": "사용중",
+      "location": "이노베이션센터 2층",
+      "manager": "김주용",
+      "project": "이노베이션센터 기자재"
+    },
+    {
+      "id": "AST-002",
+      "name": "빔프로젝터 #2",
+      "category": "영상음향장비",
+      "price": 450000,
+      "status": "사용중",
+      "location": "이노베이션센터 3층",
+      "manager": "김주용",
+      "project": "이노베이션센터 기자재"
+    },
+    {
+      "id": "AST-003",
+      "name": "영사용 스크린 #1",
+      "category": "영상음향장비",
+      "price": 180000,
+      "status": "사용중",
+      "location": "이노베이션센터 2층",
+      "manager": "김주용",
+      "project": "이노베이션센터 기자재"
+    },
+    {
+      "id": "AST-004",
+      "name": "영사용 스크린 #2",
+      "category": "영상음향장비",
+      "price": 180000,
+      "status": "사용중",
+      "location": "이노베이션센터 3층",
+      "manager": "김주용",
+      "project": "이노베이션센터 기자재"
+    },
+    {
+      "id": "AST-005",
+      "name": "무선마이크 수신기 #1",
+      "category": "영상음향장비",
+      "price": 85000,
+      "status": "사용중",
+      "location": "이노베이션센터 2층",
+      "manager": "김주용",
+      "project": "이노베이션센터 기자재"
+    },
+    {
+      "id": "AST-006",
+      "name": "무선마이크 수신기 #2",
+      "category": "영상음향장비",
+      "price": 85000,
+      "status": "사용중",
+      "location": "이노베이션센터 2층",
+      "manager": "김주용",
+      "project": "이노베이션센터 기자재"
+    },
+    {
+      "id": "AST-007",
+      "name": "스피커 시스템 #1",
+      "category": "영상음향장비",
+      "price": 320000,
+      "status": "사용중",
+      "location": "이노베이션센터 2층",
+      "manager": "김주용",
+      "project": "이노베이션센터 기자재"
+    }
+  ],
+  "summary": {
+    "totalAssets": 48,
+    "totalValue": 21210000,
+    "activeAssets": 35,
+    "pendingAssets": 13,
+    "byCategory": {
+      "영상음향장비": 29,
+      "전시장비": 6,
+      "네트워크장비": 8,
+      "IT장비": 2,
+      "기타장비": 3
+    },
+    "byStatus": {
+      "사용중": 35,
+      "대기중": 10,
+      "수리중": 2,
+      "폐기예정": 1
+    }
+  }
+}
