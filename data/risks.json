@@ -1,0 +1,37 @@
+[
+  {
+    "type": "warranty_expiring",
+    "severity": "high",
+    "asset": "네트워크 스위치 #12",
+    "description": "보증기간 만료 임박 (2025-12-15)",
+    "action": "보증 연장 계약 검토 필요"
+  },
+  {
+    "type": "maintenance",
+    "severity": "high",
+    "asset": "서버 랙 #3",
+    "description": "정기 점검 지연 (2주 경과)",
+    "action": "즉시 점검 일정 수립"
+  },
+  {
+    "type": "warranty_expiring",
+    "severity": "medium",
+    "asset": "AI 분석 서버",
+    "description": "보증기간 만료 예정 (2025-12-28)",
+    "action": "유지보수 계약 준비"
+  },
+  {
+    "type": "budget",
+    "severity": "medium",
+    "asset": "스토리지 확장",
+    "description": "예산 집행 지연 (목표 대비 -15%)",
+    "action": "집행 계획 조정"
+  },
+  {
+    "type": "delivery",
+    "severity": "medium",
+    "asset": "보안 솔루션 v2.0",
+    "description": "납품 지연 가능성 (공급사 일정 변경)",
+    "action": "공급사 상황 모니터링"
+  }
+]

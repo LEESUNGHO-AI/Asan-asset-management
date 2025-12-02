@@ -1,0 +1,64 @@
+{
+  "lastSync": "2025. 12. 2. 오전 9:00:00",
+  "syncStatus": "success",
+  "kpi": {
+    "totalAssets": 85,
+    "totalValue": 15200000000,
+    "totalValueFormatted": "₩152억",
+    "operationRate": 100,
+    "executionRate": 63.3,
+    "warrantyActiveRate": 85,
+    "daysRemaining": 29
+  },
+  "categoryChart": [
+    { "name": "네트워크 장비", "count": 25, "value": 4500000000 },
+    { "name": "서버/스토리지", "count": 18, "value": 5200000000 },
+    { "name": "보안 시스템", "count": 12, "value": 2100000000 },
+    { "name": "AI/관제", "count": 15, "value": 2400000000 },
+    { "name": "소프트웨어", "count": 8, "value": 650000000 },
+    { "name": "기타", "count": 7, "value": 350000000 }
+  ],
+  "managerChart": [
+    { "name": "이성호", "count": 32 },
+    { "name": "임혁", "count": 18 },
+    { "name": "함정영", "count": 20 },
+    { "name": "김주용", "count": 15 }
+  ],
+  "recentAssets": [
+    { "name": "네트워크 스위치 L3", "category": "네트워크 장비", "status": "운영중", "value": "₩2.5억", "manager": "이성호", "date": "2025. 12. 1." },
+    { "name": "AI 분석 서버", "category": "AI/관제", "status": "도입완료", "value": "₩3.2억", "manager": "함정영", "date": "2025. 11. 28." },
+    { "name": "스토리지 NAS", "category": "서버/스토리지", "status": "운영중", "value": "₩1.8억", "manager": "이성호", "date": "2025. 11. 25." },
+    { "name": "방화벽 UTM", "category": "보안 시스템", "status": "운영중", "value": "₩1.2억", "manager": "임혁", "date": "2025. 11. 22." },
+    { "name": "CCTV 관제 SW", "category": "소프트웨어", "status": "진행중", "value": "₩8,500만", "manager": "김주용", "date": "2025. 11. 20." },
+    { "name": "백업 솔루션", "category": "서버/스토리지", "status": "운영중", "value": "₩6,200만", "manager": "이성호", "date": "2025. 11. 18." },
+    { "name": "네트워크 모니터링", "category": "소프트웨어", "status": "도입완료", "value": "₩4,500만", "manager": "임혁", "date": "2025. 11. 15." },
+    { "name": "서버 랙 #5", "category": "서버/스토리지", "status": "설치완료", "value": "₩1.5억", "manager": "함정영", "date": "2025. 11. 12." }
+  ],
+  "infraProjects": [
+    { "name": "SDDC", "totalAssets": 20, "completedAssets": 18, "progress": 90, "budget": 4200000000, "budgetFormatted": "₩42억", "status": "진행중" },
+    { "name": "네트워크", "totalAssets": 18, "completedAssets": 16, "progress": 89, "budget": 3500000000, "budgetFormatted": "₩35억", "status": "진행중" },
+    { "name": "AI관제", "totalAssets": 15, "completedAssets": 12, "progress": 80, "budget": 2400000000, "budgetFormatted": "₩24억", "status": "진행중" },
+    { "name": "데이터허브", "totalAssets": 12, "completedAssets": 10, "progress": 83, "budget": 2100000000, "budgetFormatted": "₩21억", "status": "진행중" },
+    { "name": "통합플랫폼", "totalAssets": 10, "completedAssets": 7, "progress": 70, "budget": 1800000000, "budgetFormatted": "₩18억", "status": "진행중" },
+    { "name": "보안시스템", "totalAssets": 10, "completedAssets": 10, "progress": 100, "budget": 1200000000, "budgetFormatted": "₩12억", "status": "완료" }
+  ],
+  "upcomingAssets": [
+    { "name": "AI 추론 서버", "category": "AI/관제", "expectedDate": "2025-12-10", "expectedDateFormatted": "2025. 12. 10.", "value": 320000000, "valueFormatted": "₩3.2억", "supplier": "삼성SDS" },
+    { "name": "보안 관제 솔루션", "category": "보안 시스템", "expectedDate": "2025-12-15", "expectedDateFormatted": "2025. 12. 15.", "value": 180000000, "valueFormatted": "₩1.8억", "supplier": "안랩" }
+  ],
+  "risks": [
+    { "type": "warranty_expiring", "severity": "high", "asset": "네트워크 스위치 #12", "description": "보증기간 만료 임박 (2025-12-15)", "action": "보증 연장 계약 검토 필요" },
+    { "type": "maintenance", "severity": "high", "asset": "서버 랙 #3", "description": "정기 점검 지연 (2주 경과)", "action": "즉시 점검 일정 수립" },
+    { "type": "warranty_expiring", "severity": "medium", "asset": "AI 분석 서버", "description": "보증기간 만료 예정 (2025-12-28)", "action": "유지보수 계약 준비" },
+    { "type": "budget", "severity": "medium", "asset": "스토리지 확장", "description": "예산 집행 지연 (목표 대비 -15%)", "action": "집행 계획 조정" }
+  ],
+  "budget": {
+    "total": 24000000000,
+    "executed": 15200000000,
+    "remaining": 8800000000,
+    "executionRate": 63.3,
+    "totalFormatted": "₩240억",
+    "executedFormatted": "₩152억",
+    "remainingFormatted": "₩88억"
+  }
+}

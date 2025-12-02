@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 아산 스마트시티 대시보드 커스텀 스타일 */
+@layer base {
+  body {
+    @apply bg-slate-900 text-slate-100 font-sans antialiased;
+  }
+  
+  /* 스크롤바 스타일 */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-slate-800 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-600 rounded-full hover:bg-slate-500;
+  }
+}
+
+@layer components {
+  /* 대시보드 카드 */
+  .dashboard-card {
+    @apply bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-slate-700/50 p-6 transition-all duration-300 hover:border-slate-600/50 hover:shadow-lg hover:shadow-slate-900/20;
+  }
+  
+  /* KPI 카드 */
+  .kpi-card {
+    @apply dashboard-card relative overflow-hidden;
+  }
+  
+  .kpi-card::before {
+    content: '';
+    @apply absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500;
+  }
+  
+  /* 상태 뱃지 */
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .status-badge-success {
+    @apply status-badge bg-emerald-500/20 text-emerald-400;
+  }
+  
+  .status-badge-warning {
+    @apply status-badge bg-amber-500/20 text-amber-400;
+  }
+  
+  .status-badge-danger {
+    @apply status-badge bg-red-500/20 text-red-400;
+  }
+  
+  .status-badge-info {
+    @apply status-badge bg-blue-500/20 text-blue-400;
+  }
+  
+  /* 동기화 인디케이터 */
+  .sync-indicator {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium;
+  }
+  
+  .sync-indicator-active {
+    @apply sync-indicator bg-emerald-500/20 text-emerald-400;
+  }
+  
+  .sync-indicator-inactive {
+    @apply sync-indicator bg-slate-500/20 text-slate-400;
+  }
+  
+  .sync-indicator-error {
+    @apply sync-indicator bg-red-500/20 text-red-400;
+  }
+  
+  /* 펄스 애니메이션 */
+  .pulse-dot {
+    @apply relative flex h-2 w-2;
+  }
+  
+  .pulse-dot::before {
+    content: '';
+    @apply absolute inline-flex h-full w-full rounded-full bg-current opacity-75 animate-ping;
+  }
+  
+  .pulse-dot::after {
+    content: '';
+    @apply relative inline-flex rounded-full h-2 w-2 bg-current;
+  }
+  
+  /* 프로그레스 바 */
+  .progress-bar {
+    @apply h-2 bg-slate-700 rounded-full overflow-hidden;
+  }
+  
+  .progress-bar-fill {
+    @apply h-full rounded-full transition-all duration-500 ease-out;
+  }
+  
+  /* 테이블 스타일 */
+  .data-table {
+    @apply w-full text-sm;
+  }
+  
+  .data-table thead {
+    @apply text-xs text-slate-400 uppercase bg-slate-800/50;
+  }
+  
+  .data-table th {
+    @apply px-4 py-3 text-left font-medium;
+  }
+  
+  .data-table td {
+    @apply px-4 py-3 border-t border-slate-700/50;
+  }
+  
+  .data-table tbody tr {
+    @apply hover:bg-slate-800/30 transition-colors;
+  }
+  
+  /* 버튼 */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  }
+  
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-600 hover:to-blue-600 hover:shadow-lg hover:shadow-cyan-500/25;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-slate-700 text-slate-200 hover:bg-slate-600;
+  }
+  
+  .btn-outline {
+    @apply btn border border-slate-600 text-slate-300 hover:bg-slate-800 hover:border-slate-500;
+  }
+  
+  /* 탭 네비게이션 */
+  .tab-nav {
+    @apply flex items-center gap-1 p-1 bg-slate-800/50 rounded-xl;
+  }
+  
+  .tab-item {
+    @apply px-4 py-2 rounded-lg text-sm font-medium text-slate-400 transition-all duration-200 hover:text-slate-200;
+  }
+  
+  .tab-item-active {
+    @apply tab-item bg-slate-700 text-white;
+  }
+  
+  /* 차트 컨테이너 */
+  .chart-container {
+    @apply relative h-64;
+  }
+  
+  /* 헤더 */
+  .header-gradient {
+    @apply bg-gradient-to-b from-slate-800/80 to-slate-900/80 backdrop-blur-sm border-b border-slate-700/50;
+  }
+  
+  /* 연동 상태 배너 */
+  .integration-banner {
+    @apply p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20;
+  }
+}
+
+@layer utilities {
+  /* 그라데이션 텍스트 */
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400;
+  }
+  
+  /* 글로우 효과 */
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+  }
+  
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* 애니메이션 지연 */
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+}

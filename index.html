@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아산시 통합자산관리 대시보드 | Digital OASIS v4.0</title>
+  <meta name="description" content="아산시 강소형 스마트시티 구축사업 자산관리 시스템 - Slack ↔ Notion ↔ GitHub 자동 연동">
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏙️</text></svg>">
+  
+  <!-- 빌드된 Tailwind CSS (프로덕션) -->
+  <link rel="stylesheet" href="./dist/output.css">
+  
+  <!-- Fallback: CDN (빌드 파일이 없을 경우만) -->
+  <script>
+    // output.css 로드 실패 시 CDN 사용
+    document.addEventListener('DOMContentLoaded', function() {
+      var link = document.querySelector('link[href="./dist/output.css"]');
+      if (link) {
+        link.onerror = function() {
+          var cdn = document.createElement('script');
+          cdn.src = 'https://cdn.tailwindcss.com';
+          document.head.appendChild(cdn);
+          console.warn('Using Tailwind CDN fallback');
+        };
+      }
+    });
+  </script>
+  
+  <!-- Font Awesome (아이콘) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  
+  <!-- Pretendard 폰트 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+  
+  <style>
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      min-height: 100vh;
+    }
+    
+    /* 로딩 스피너 */
+    .loading-spinner {
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top: 3px solid #06b6d4;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 펄스 애니메이션 */
+    .pulse-dot {
+      position: relative;
+    }
+    .pulse-dot::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse-ring 1.5s ease-out infinite;
+      opacity: 0.75;
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(1); opacity: 0.75; }
+      100% { transform: scale(2); opacity: 0; }
+    }
+    
+    /* 그라데이션 텍스트 */
+    .gradient-text {
+      background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* 카드 호버 효과 */
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 antialiased">
+  
+  <!-- 헤더 -->
+  <header class="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- 로고 -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+            <i class="fas fa-city text-white text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-white">아산시 스마트시티</h1>
+            <p class="text-xs text-slate-400">자산관리 시스템 v4.0</p>
+          </div>
+        </div>
+        
+        <!-- 동기화 상태 & 링크 -->
+        <div class="flex items-center gap-4">
+          <!-- 동기화 상태 -->
+          <div id="sync-status" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-700/50 text-slate-400 text-xs font-medium">
+            <span class="loading-spinner w-3 h-3 border-2"></span>
+            <span>동기화 확인 중...</span>
+          </div>
+          
+          <!-- 마지막 업데이트 -->
+          <div class="hidden sm:block text-xs text-slate-400">
+            <span id="last-sync">-</span>
+          </div>
+          
+          <!-- Notion 링크 -->
+          <a href="https://www.notion.so/2aa50aa9577d81ee9cd0e7e63b3fdf25" 
+             target="_blank" 
+             class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-700/50 hover:bg-slate-600/50 text-sm transition-colors">
+            <i class="fab fa-notion"></i>
+            <span>Notion</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 메인 콘텐츠 -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- 연동 상태 배너 -->
+    <div class="mb-8 p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20">
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2 text-lg">
+            <i class="fab fa-slack text-purple-400"></i>
+            <i class="fas fa-arrow-right text-slate-500 text-sm"></i>
+            <i class="fab fa-notion text-white"></i>
+            <i class="fas fa-arrow-right text-slate-500 text-sm"></i>
+            <i class="fab fa-github text-white"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-white">Slack → Notion → GitHub 자동 연동</p>
+            <p class="text-xs text-slate-400">#자산관리대장 채널 데이터가 자동으로 동기화됩니다</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 text-xs">
+          <span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400">매일 3회 자동 동기화</span>
+          <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-400">09:00 / 15:00 / 21:00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI 카드 그리드 -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+      <!-- 총 자산 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover-lift">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+            <i class="fas fa-boxes text-cyan-400"></i>
+          </div>
+          <span class="text-xs text-slate-400">총 자산</span>
+        </div>
+        <div class="text-2xl font-bold text-white" id="kpi-total-assets">-</div>
+        <div class="text-xs text-slate-500 mt-1">등록 완료</div>
+      </div>
+      
+      <!-- 총 가치 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover-lift">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+            <i class="fas fa-won-sign text-emerald-400"></i>
+          </div>
+          <span class="text-xs text-slate-400">총 가치</span>
+        </div>
+        <div class="text-2xl font-bold text-white" id="kpi-total-value">-</div>
+        <div class="text-xs text-slate-500 mt-1">자산 총액</div>
+      </div>
+      
+      <!-- 가동률 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover-lift">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-chart-line text-blue-400"></i>
+          </div>
+          <span class="text-xs text-slate-400">가동률</span>
+        </div>
+        <div class="text-2xl font-bold text-white" id="kpi-operation-rate">-</div>
+        <div class="text-xs text-slate-500 mt-1">정상 운영</div>
+      </div>
+      
+      <!-- 예산 집행률 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover-lift">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center">
+            <i class="fas fa-coins text-amber-400"></i>
+          </div>
+          <span class="text-xs text-slate-400">예산 집행률</span>
+        </div>
+        <div class="text-2xl font-bold text-white" id="kpi-execution-rate">-</div>
+        <div class="text-xs text-slate-500 mt-1">집행 현황</div>
+      </div>
+      
+      <!-- 보증기간 내 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover-lift">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+            <i class="fas fa-shield-alt text-purple-400"></i>
+          </div>
+          <span class="text-xs text-slate-400">보증기간 내</span>
+        </div>
+        <div class="text-2xl font-bold text-white" id="kpi-warranty-rate">-</div>
+        <div class="text-xs text-slate-500 mt-1">유효 보증</div>
+      </div>
+      
+      <!-- D-Day -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-4 hover-lift">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center">
+            <i class="fas fa-calendar-day text-red-400"></i>
+          </div>
+          <span class="text-xs text-slate-400">사업 종료</span>
+        </div>
+        <div class="text-2xl font-bold text-white" id="kpi-days-remaining">-</div>
+        <div class="text-xs text-slate-500 mt-1">2025.12.31</div>
+      </div>
+    </div>
+
+    <!-- 차트 섹션 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <!-- 카테고리별 자산 분포 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover-lift">
+        <h3 class="text-lg font-semibold text-white mb-4">
+          <i class="fas fa-chart-pie text-cyan-400 mr-2"></i>
+          카테고리별 자산 분포
+        </h3>
+        <div class="relative h-64">
+          <canvas id="category-chart"></canvas>
+        </div>
+      </div>
+      
+      <!-- 담당자별 자산 현황 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover-lift">
+        <h3 class="text-lg font-semibold text-white mb-4">
+          <i class="fas fa-users text-blue-400 mr-2"></i>
+          담당자별 자산 현황
+        </h3>
+        <div class="relative h-64">
+          <canvas id="manager-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- 인프라 프로젝트 -->
+    <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 mb-8 hover-lift">
+      <h3 class="text-lg font-semibold text-white mb-4">
+        <i class="fas fa-project-diagram text-emerald-400 mr-2"></i>
+        대형 인프라 프로젝트 현황
+      </h3>
+      <div id="infra-projects" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- 동적으로 생성 -->
+        <div class="text-slate-400 text-center py-8">데이터 로딩 중...</div>
+      </div>
+    </div>
+
+    <!-- 테이블 섹션 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <!-- 최근 등록 자산 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover-lift">
+        <h3 class="text-lg font-semibold text-white mb-4">
+          <i class="fas fa-clock text-amber-400 mr-2"></i>
+          최근 등록 자산
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="text-xs text-slate-400 uppercase bg-slate-800/50">
+              <tr>
+                <th class="px-3 py-2 text-left">자산명</th>
+                <th class="px-3 py-2 text-left">카테고리</th>
+                <th class="px-3 py-2 text-left">상태</th>
+                <th class="px-3 py-2 text-right">가치</th>
+              </tr>
+            </thead>
+            <tbody id="recent-assets-table">
+              <tr>
+                <td colspan="4" class="px-3 py-8 text-center text-slate-400">데이터 로딩 중...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- 리스크 현황 -->
+      <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover-lift">
+        <h3 class="text-lg font-semibold text-white mb-4">
+          <i class="fas fa-exclamation-triangle text-red-400 mr-2"></i>
+          리스크 현황
+        </h3>
+        <div id="risks-list" class="space-y-3">
+          <div class="text-slate-400 text-center py-8">데이터 로딩 중...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 예산 현황 -->
+    <div class="bg-slate-800/50 backdrop-blur-sm rounded-xl border border-slate-700/50 p-6 hover-lift">
+      <h3 class="text-lg font-semibold text-white mb-4">
+        <i class="fas fa-wallet text-emerald-400 mr-2"></i>
+        예산 현황
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="text-3xl font-bold gradient-text" id="budget-total">₩240억</div>
+          <div class="text-sm text-slate-400 mt-1">총 예산</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-emerald-400" id="budget-executed">-</div>
+          <div class="text-sm text-slate-400 mt-1">집행 완료</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-amber-400" id="budget-remaining">-</div>
+          <div class="text-sm text-slate-400 mt-1">잔액</div>
+        </div>
+      </div>
+      <div class="mt-6">
+        <div class="flex justify-between text-sm mb-2">
+          <span class="text-slate-400">집행 진행률</span>
+          <span class="text-white font-medium" id="budget-rate">-</span>
+        </div>
+        <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+          <div id="budget-progress" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full transition-all duration-1000" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 푸터 -->
+  <footer class="border-t border-slate-700/50 mt-12 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="text-sm text-slate-400">
+          © 2025 아산시 강소형 스마트시티 구축사업 | 제일엔지니어링 PMO
+        </div>
+        <div class="flex items-center gap-4 text-sm text-slate-500">
+          <span>관리자: Danny</span>
+          <span>|</span>
+          <a href="https://github.com/leesungho-ai/Asan-asset-management" target="_blank" class="hover:text-white transition-colors">
+            <i class="fab fa-github mr-1"></i>GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 데이터 로드 및 렌더링 스크립트 -->
+  <script>
+    // 전역 데이터 저장소
+    let dashboardData = null;
+    let categoryChart = null;
+    let managerChart = null;
+
+    // 데이터 로드
+    async function loadDashboardData() {
+      try {
+        const response = await fetch('./data/dashboard-data.json');
+        if (!response.ok) throw new Error('Data not found');
+        dashboardData = await response.json();
+        renderDashboard();
+      } catch (error) {
+        console.warn('dashboard-data.json 로드 실패, 개별 파일 로드 시도...', error);
+        await loadIndividualFiles();
+      }
+    }
+
+    // 개별 JSON 파일 로드 (fallback)
+    async function loadIndividualFiles() {
+      try {
+        const [syncInfo, statistics, infraProjects, risks, budget] = await Promise.all([
+          fetch('./data/sync-info.json').then(r => r.json()).catch(() => ({})),
+          fetch('./data/statistics.json').then(r => r.json()).catch(() => ({})),
+          fetch('./data/infra-projects.json').then(r => r.json()).catch(() => []),
+          fetch('./data/risks.json').then(r => r.json()).catch(() => []),
+          fetch('./data/budget.json').then(r => r.json()).catch(() => ({})),
+        ]);
+
+        dashboardData = {
+          lastSync: syncInfo.lastSyncKST || '-',
+          syncStatus: syncInfo.status || 'unknown',
+          kpi: {
+            totalAssets: statistics.totalAssets || 0,
+            totalValueFormatted: formatCurrency(statistics.totalValue || 0),
+            operationRate: 100,
+            executionRate: budget.executionRate || 0,
+            warrantyActiveRate: statistics.totalAssets > 0 
+              ? Math.round((statistics.warrantyActive / statistics.totalAssets) * 100) 
+              : 0,
+            daysRemaining: calculateDaysRemaining(),
+          },
+          categoryChart: Object.entries(statistics.byCategory || {}).map(([name, data]) => ({
+            name, count: data.count
+          })),
+          managerChart: Object.entries(statistics.byManager || {}).map(([name, data]) => ({
+            name, count: data.count
+          })),
+          recentAssets: [],
+          infraProjects: infraProjects,
+          risks: risks,
+          budget: {
+            totalFormatted: '₩240억',
+            executedFormatted: formatCurrency(budget.executed || 0),
+            remainingFormatted: formatCurrency(budget.remaining || 0),
+            executionRate: budget.executionRate || 0,
+          },
+        };
+
+        renderDashboard();
+      } catch (error) {
+        console.error('데이터 로드 실패:', error);
+        showError();
+      }
+    }
+
+    // 통화 포맷팅
+    function formatCurrency(value) {
+      if (value >= 100000000) return `₩${(value / 100000000).toFixed(1)}억`;
+      if (value >= 10000) return `₩${(value / 10000).toFixed(0)}만`;
+      return `₩${value.toLocaleString()}`;
+    }
+
+    // D-Day 계산
+    function calculateDaysRemaining() {
+      const endDate = new Date('2025-12-31');
+      const today = new Date();
+      return Math.max(0, Math.ceil((endDate - today) / (1000 * 60 * 60 * 24)));
+    }
+
+    // 대시보드 렌더링
+    function renderDashboard() {
+      if (!dashboardData) return;
+
+      // 동기화 상태 업데이트
+      updateSyncStatus();
+
+      // KPI 업데이트
+      updateKPIs();
+
+      // 차트 렌더링
+      renderCategoryChart();
+      renderManagerChart();
+
+      // 테이블 및 리스트 렌더링
+      renderInfraProjects();
+      renderRecentAssets();
+      renderRisks();
+      renderBudget();
+    }
+
+    // 동기화 상태 업데이트
+    function updateSyncStatus() {
+      const statusEl = document.getElementById('sync-status');
+      const lastSyncEl = document.getElementById('last-sync');
+      
+      if (dashboardData.syncStatus === 'success') {
+        statusEl.innerHTML = `
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>실시간 동기화</span>
+        `;
+        statusEl.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium';
+      } else {
+        statusEl.innerHTML = `
+          <i class="fas fa-exclamation-circle"></i>
+          <span>동기화 필요</span>
+        `;
+        statusEl.className = 'flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-medium';
+      }
+
+      lastSyncEl.textContent = dashboardData.lastSync ? `최종: ${dashboardData.lastSync}` : '-';
+    }
+
+    // KPI 업데이트
+    function updateKPIs() {
+      const kpi = dashboardData.kpi;
+      
+      document.getElementById('kpi-total-assets').textContent = `${kpi.totalAssets || 0}개`;
+      document.getElementById('kpi-total-value').textContent = kpi.totalValueFormatted || '-';
+      document.getElementById('kpi-operation-rate').textContent = `${kpi.operationRate || 0}%`;
+      document.getElementById('kpi-execution-rate').textContent = `${kpi.executionRate || 0}%`;
+      document.getElementById('kpi-warranty-rate').textContent = `${kpi.warrantyActiveRate || 0}%`;
+      document.getElementById('kpi-days-remaining').textContent = `D-${kpi.daysRemaining || 0}`;
+    }
+
+    // 카테고리 차트
+    function renderCategoryChart() {
+      const ctx = document.getElementById('category-chart');
+      if (!ctx) return;
+
+      if (categoryChart) categoryChart.destroy();
+
+      const data = dashboardData.categoryChart || [];
+      const colors = ['#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#f43f5e'];
+
+      categoryChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: data.map(d => d.name),
+          datasets: [{
+            data: data.map(d => d.count),
+            backgroundColor: colors.slice(0, data.length),
+            borderColor: 'transparent',
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: { color: '#94a3b8', font: { size: 11 } }
+            }
+          },
+          cutout: '60%',
+        }
+      });
+    }
+
+    // 담당자 차트
+    function renderManagerChart() {
+      const ctx = document.getElementById('manager-chart');
+      if (!ctx) return;
+
+      if (managerChart) managerChart.destroy();
+
+      const data = dashboardData.managerChart || [];
+
+      managerChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.map(d => d.name),
+          datasets: [{
+            label: '자산 수',
+            data: data.map(d => d.count),
+            backgroundColor: 'rgba(59, 130, 246, 0.6)',
+            borderColor: 'rgb(59, 130, 246)',
+            borderWidth: 1,
+            borderRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(148, 163, 184, 0.1)' },
+              ticks: { color: '#94a3b8' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8', maxRotation: 45 }
+            }
+          }
+        }
+      });
+    }
+
+    // 인프라 프로젝트 렌더링
+    function renderInfraProjects() {
+      const container = document.getElementById('infra-projects');
+      const projects = dashboardData.infraProjects || [];
+
+      if (projects.length === 0) {
+        container.innerHTML = '<div class="text-slate-400 text-center py-8 col-span-full">등록된 프로젝트가 없습니다.</div>';
+        return;
+      }
+
+      container.innerHTML = projects.map(p => `
+        <div class="bg-slate-700/30 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-medium text-white">${p.name}</span>
+            <span class="px-2 py-0.5 rounded text-xs ${p.status === '완료' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-blue-500/20 text-blue-400'}">${p.status}</span>
+          </div>
+          <div class="text-sm text-slate-400 mb-2">${p.completedAssets}/${p.totalAssets} 자산 완료</div>
+          <div class="h-2 bg-slate-600 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style="width: ${p.progress}%"></div>
+          </div>
+          <div class="text-right text-xs text-slate-500 mt-1">${p.progress}%</div>
+        </div>
+      `).join('');
+    }
+
+    // 최근 자산 테이블
+    function renderRecentAssets() {
+      const tbody = document.getElementById('recent-assets-table');
+      const assets = dashboardData.recentAssets || [];
+
+      if (assets.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="px-3 py-8 text-center text-slate-400">등록된 자산이 없습니다.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = assets.slice(0, 8).map(a => `
+        <tr class="hover:bg-slate-700/30 transition-colors">
+          <td class="px-3 py-2 text-white font-medium">${a.name}</td>
+          <td class="px-3 py-2 text-slate-400">${a.category}</td>
+          <td class="px-3 py-2">
+            <span class="px-2 py-0.5 rounded text-xs ${getStatusColor(a.status)}">${a.status}</span>
+          </td>
+          <td class="px-3 py-2 text-right text-slate-300">${a.value}</td>
+        </tr>
+      `).join('');
+    }
+
+    // 상태 색상
+    function getStatusColor(status) {
+      const colors = {
+        '운영중': 'bg-emerald-500/20 text-emerald-400',
+        '완료': 'bg-emerald-500/20 text-emerald-400',
+        '도입완료': 'bg-emerald-500/20 text-emerald-400',
+        '진행중': 'bg-blue-500/20 text-blue-400',
+        '점검필요': 'bg-amber-500/20 text-amber-400',
+        '수리중': 'bg-red-500/20 text-red-400',
+      };
+      return colors[status] || 'bg-slate-500/20 text-slate-400';
+    }
+
+    // 리스크 렌더링
+    function renderRisks() {
+      const container = document.getElementById('risks-list');
+      const risks = dashboardData.risks || [];
+
+      if (risks.length === 0) {
+        container.innerHTML = '<div class="text-slate-400 text-center py-8">현재 리스크 없음 ✅</div>';
+        return;
+      }
+
+      const severityColors = {
+        critical: 'border-red-500 bg-red-500/10',
+        high: 'border-orange-500 bg-orange-500/10',
+        medium: 'border-amber-500 bg-amber-500/10',
+        low: 'border-blue-500 bg-blue-500/10',
+      };
+
+      container.innerHTML = risks.slice(0, 5).map(r => `
+        <div class="border-l-4 ${severityColors[r.severity] || 'border-slate-500'} rounded-r-lg p-3">
+          <div class="flex items-center justify-between mb-1">
+            <span class="font-medium text-white text-sm">${r.asset}</span>
+            <span class="text-xs uppercase ${r.severity === 'high' ? 'text-red-400' : 'text-amber-400'}">${r.severity}</span>
+          </div>
+          <p class="text-xs text-slate-400">${r.description}</p>
+        </div>
+      `).join('');
+    }
+
+    // 예산 렌더링
+    function renderBudget() {
+      const budget = dashboardData.budget || {};
+      
+      document.getElementById('budget-total').textContent = budget.totalFormatted || '₩240억';
+      document.getElementById('budget-executed').textContent = budget.executedFormatted || '-';
+      document.getElementById('budget-remaining').textContent = budget.remainingFormatted || '-';
+      document.getElementById('budget-rate').textContent = `${budget.executionRate || 0}%`;
+      
+      const progressBar = document.getElementById('budget-progress');
+      setTimeout(() => {
+        progressBar.style.width = `${budget.executionRate || 0}%`;
+      }, 300);
+    }
+
+    // 에러 표시
+    function showError() {
+      document.getElementById('sync-status').innerHTML = `
+        <i class="fas fa-times-circle text-red-400"></i>
+        <span class="text-red-400">연결 실패</span>
+      `;
+    }
+
+    // 초기화
+    document.addEventListener('DOMContentLoaded', loadDashboardData);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "totalAssets": 85,
+  "totalValue": 15200000000,
+  "byCategory": {
+    "네트워크 장비": { "count": 25, "value": 4500000000 },
+    "서버/스토리지": { "count": 18, "value": 5200000000 },
+    "보안 시스템": { "count": 12, "value": 2100000000 },
+    "AI/관제": { "count": 15, "value": 2400000000 },
+    "소프트웨어": { "count": 8, "value": 650000000 },
+    "기타": { "count": 7, "value": 350000000 }
+  },
+  "byManager": {
+    "이성호": { "count": 32, "value": 6500000000 },
+    "임혁": { "count": 18, "value": 3200000000 },
+    "함정영": { "count": 20, "value": 3500000000 },
+    "김주용": { "count": 15, "value": 2000000000 }
+  },
+  "byStatus": {
+    "운영중": { "count": 45, "value": 8500000000 },
+    "도입완료": { "count": 25, "value": 4200000000 },
+    "진행중": { "count": 10, "value": 1800000000 },
+    "점검필요": { "count": 5, "value": 700000000 }
+  },
+  "byProject": {
+    "SDDC": { "count": 20, "value": 4200000000 },
+    "네트워크": { "count": 18, "value": 3500000000 },
+    "AI관제": { "count": 15, "value": 2400000000 },
+    "데이터허브": { "count": 12, "value": 2100000000 },
+    "통합플랫폼": { "count": 10, "value": 1800000000 },
+    "보안시스템": { "count": 10, "value": 1200000000 }
+  },
+  "warrantyActive": 72,
+  "warrantyExpired": 13,
+  "recentlyAdded": 12,
+  "upcomingDeliveries": 8
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "SDDC (소프트웨어 정의 데이터센터)",
+    "totalAssets": 20,
+    "completedAssets": 18,
+    "progress": 90,
+    "budget": 4200000000,
+    "status": "진행중"
+  },
+  {
+    "name": "네트워크 인프라",
+    "totalAssets": 18,
+    "completedAssets": 16,
+    "progress": 89,
+    "budget": 3500000000,
+    "status": "진행중"
+  },
+  {
+    "name": "AI 관제 시스템",
+    "totalAssets": 15,
+    "completedAssets": 12,
+    "progress": 80,
+    "budget": 2400000000,
+    "status": "진행중"
+  },
+  {
+    "name": "데이터 허브",
+    "totalAssets": 12,
+    "completedAssets": 10,
+    "progress": 83,
+    "budget": 2100000000,
+    "status": "진행중"
+  },
+  {
+    "name": "통합 플랫폼",
+    "totalAssets": 10,
+    "completedAssets": 7,
+    "progress": 70,
+    "budget": 1800000000,
+    "status": "진행중"
+  },
+  {
+    "name": "보안 시스템",
+    "totalAssets": 10,
+    "completedAssets": 10,
+    "progress": 100,
+    "budget": 1200000000,
+    "status": "완료"
+  }
+]

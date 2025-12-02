@@ -1,0 +1,14 @@
+{
+  "total": 24000000000,
+  "executed": 15200000000,
+  "remaining": 8800000000,
+  "executionRate": 63.3,
+  "byCategory": [
+    { "name": "네트워크 장비", "budget": 4500000000, "percentage": 18.8 },
+    { "name": "서버/스토리지", "budget": 5200000000, "percentage": 21.7 },
+    { "name": "보안 시스템", "budget": 2100000000, "percentage": 8.8 },
+    { "name": "AI/관제", "budget": 2400000000, "percentage": 10.0 },
+    { "name": "소프트웨어", "budget": 650000000, "percentage": 2.7 },
+    { "name": "기타", "budget": 350000000, "percentage": 1.5 }
+  ]
+}
