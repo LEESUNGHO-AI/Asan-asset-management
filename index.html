@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>아산시 스마트시티 자산관리 대시보드</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏙️</text></svg>">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -38,9 +38,9 @@
       <div class="flex items-center gap-3 flex-wrap justify-center">
         <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30">
           <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
-          <span class="text-emerald-400 text-sm font-medium">실시간 연동</span>
+          <span class="text-emerald-400 text-sm font-medium">Notion 연동</span>
         </div>
-        <span class="text-slate-500 text-sm" id="lastUpdate">2025-12-02 09:00 KST</span>
+        <span class="text-slate-500 text-sm" id="lastUpdate"></span>
         <a href="https://www.notion.so/2aa50aa9577d81ee9cd0e7e63b3fdf25" target="_blank" 
            class="px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 transition text-sm font-medium flex items-center gap-2">
           <i class="fab fa-notion"></i>Notion DB 열기
@@ -71,20 +71,20 @@
         </div>
         <div>
           <p class="font-semibold text-white">Slack #자산관리대장 → Notion DB → GitHub Pages</p>
-          <p class="text-sm text-slate-400">자동 동기화 시스템 | 5시간 주기 업데이트</p>
+          <p class="text-sm text-slate-400">데이터 연동 시스템 | 동기화 주기: 5시간</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
         <span class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-sm font-medium">
           <i class="fas fa-check-circle mr-1"></i>정상 작동중
         </span>
+        <span class="text-xs text-slate-500">성공률 99.4%</span>
       </div>
     </div>
   </div>
 
   <!-- KPI 카드 6개 -->
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-    <!-- 총 자산 -->
     <div class="glass rounded-2xl p-5 glow-cyan">
       <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center mb-3">
         <i class="fas fa-boxes text-cyan-400 text-lg"></i>
@@ -94,7 +94,6 @@
       <div class="text-xs text-cyan-400 mt-1">운영 44 + 예정 41</div>
     </div>
     
-    <!-- 총 가치 -->
     <div class="glass rounded-2xl p-5 glow-blue">
       <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3">
         <i class="fas fa-won-sign text-emerald-400 text-lg"></i>
@@ -104,7 +103,6 @@
       <div class="text-xs text-emerald-400 mt-1">+₩150억 예정</div>
     </div>
     
-    <!-- 가동률 -->
     <div class="glass rounded-2xl p-5">
       <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3">
         <i class="fas fa-check-circle text-blue-400 text-lg"></i>
@@ -114,7 +112,6 @@
       <div class="text-xs text-emerald-400 mt-1">목표 95% 초과</div>
     </div>
     
-    <!-- 예산 집행률 -->
     <div class="glass rounded-2xl p-5">
       <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-3">
         <i class="fas fa-coins text-amber-400 text-lg"></i>
@@ -124,7 +121,6 @@
       <div class="text-xs text-red-400 mt-1">⚠️ 집중 필요</div>
     </div>
     
-    <!-- 계약 체결률 -->
     <div class="glass rounded-2xl p-5">
       <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3">
         <i class="fas fa-file-contract text-purple-400 text-lg"></i>
@@ -134,7 +130,6 @@
       <div class="text-xs text-blue-400 mt-1">↗ 진행중</div>
     </div>
     
-    <!-- D-Day -->
     <div class="glass rounded-2xl p-5">
       <div class="w-10 h-10 rounded-xl bg-red-500/20 flex items-center justify-center mb-3">
         <i class="fas fa-calendar-day text-red-400 text-lg"></i>
@@ -179,7 +174,6 @@
 
   <!-- 차트 섹션 -->
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <!-- 카테고리별 차트 -->
     <div class="glass rounded-2xl p-6 glow-cyan">
       <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
         <i class="fas fa-chart-pie text-cyan-400"></i>카테고리별 자산 분포
@@ -187,9 +181,14 @@
       <div class="h-72">
         <canvas id="categoryChart"></canvas>
       </div>
+      <div class="mt-4 grid grid-cols-2 gap-2 text-sm">
+        <div class="flex justify-between"><span class="text-slate-400">영상음향장비</span><span>₩14,503,570</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">전시장비</span><span>₩2,446,300</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">네트워크장비</span><span>₩1,572,480</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">기타장비</span><span>₩690,000</span></div>
+      </div>
     </div>
     
-    <!-- 담당자별 차트 -->
     <div class="glass rounded-2xl p-6 glow-blue">
       <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
         <i class="fas fa-users text-blue-400"></i>담당자별 자산 현황
@@ -197,15 +196,20 @@
       <div class="h-72">
         <canvas id="managerChart"></canvas>
       </div>
+      <div class="mt-4 grid grid-cols-3 gap-2 text-sm text-center">
+        <div><span class="text-slate-400">김주용</span><div class="font-bold">23개 / 52.3%</div></div>
+        <div><span class="text-slate-400">임혁</span><div class="font-bold">15개 / 34.1%</div></div>
+        <div><span class="text-slate-400">이성호</span><div class="font-bold">6개 / 13.6%</div></div>
+      </div>
     </div>
   </div>
 
-  <!-- 자산 목록 테이블 (Notion DB 실제 데이터) -->
+  <!-- 자산 목록 테이블 -->
   <div class="glass rounded-2xl p-6 mb-8">
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
       <h3 class="text-lg font-bold flex items-center gap-2">
         <i class="fas fa-database text-cyan-400"></i>자산관리 마스터 DB
-        <span class="text-sm font-normal text-slate-400">(Notion 실시간 연동)</span>
+        <span class="text-sm font-normal text-slate-400">(Notion 연동)</span>
       </h3>
       <a href="https://www.notion.so/2aa50aa9577d81ee9cd0e7e63b3fdf25" target="_blank"
          class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white text-sm font-medium transition flex items-center gap-2">
@@ -243,7 +247,7 @@
             <td class="py-3">이성호</td>
             <td class="py-3"><span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">사용중</span></td>
             <td class="py-3 text-slate-400">이노베이션센터 1층</td>
-            <td class="py-3 text-right pr-4 text-emerald-400">-</td>
+            <td class="py-3 text-right pr-4 text-slate-500">-</td>
           </tr>
           <tr class="hover:bg-cyan-500/5 transition cursor-pointer" onclick="window.open('https://www.notion.so/4fad0a8ba60441d184dcd7356d11a110')">
             <td class="py-3 pl-4 text-cyan-400 font-mono">AS-48</td>
@@ -252,16 +256,16 @@
             <td class="py-3">이성호</td>
             <td class="py-3"><span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">사용중</span></td>
             <td class="py-3 text-slate-400">이노베이션센터 1층</td>
-            <td class="py-3 text-right pr-4 text-emerald-400">-</td>
+            <td class="py-3 text-right pr-4 text-slate-500">-</td>
           </tr>
           <tr class="hover:bg-cyan-500/5 transition cursor-pointer" onclick="window.open('https://www.notion.so/b9e186010397466eb212d68f3cf8ab43')">
             <td class="py-3 pl-4 text-cyan-400 font-mono">AS-12</td>
             <td class="py-3 font-medium">LED Controller (H5)</td>
             <td class="py-3"><span class="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-xs">영상음향장비</span></td>
-            <td class="py-3">임혁</td>
+            <td class="py-3">김주용</td>
             <td class="py-3"><span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">사용중</span></td>
             <td class="py-3 text-slate-400">이노베이션센터 2층</td>
-            <td class="py-3 text-right pr-4 text-emerald-400">-</td>
+            <td class="py-3 text-right pr-4 text-slate-500">-</td>
           </tr>
           <tr class="hover:bg-cyan-500/5 transition cursor-pointer" onclick="window.open('https://www.notion.so/6114e02dce2e47fcbf0c24b7c89ee55b')">
             <td class="py-3 pl-4 text-cyan-400 font-mono">AS-08</td>
@@ -270,7 +274,7 @@
             <td class="py-3">이성호</td>
             <td class="py-3"><span class="px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 text-xs">사용중</span></td>
             <td class="py-3 text-slate-400">이노베이션센터 1층</td>
-            <td class="py-3 text-right pr-4 text-emerald-400">-</td>
+            <td class="py-3 text-right pr-4 text-slate-500">-</td>
           </tr>
         </tbody>
       </table>
@@ -296,7 +300,6 @@
     </h3>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <!-- SDDC -->
       <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
         <div class="flex items-center justify-between mb-3">
           <span class="text-lg">🖥️</span>
@@ -304,18 +307,13 @@
         </div>
         <h4 class="font-bold mb-1">SDDC Platform 구축</h4>
         <p class="text-emerald-400 font-medium mb-2">27억원</p>
-        <p class="text-sm text-slate-400">담당: 이성호</p>
+        <p class="text-sm text-slate-400">담당: 임혁</p>
         <div class="mt-3">
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>진행률</span><span>90%</span>
-          </div>
-          <div class="h-2 bg-slate-700 rounded-full">
-            <div class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style="width:90%"></div>
-          </div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1"><span>진행률</span><span>90%</span></div>
+          <div class="h-2 bg-slate-700 rounded-full"><div class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full" style="width:90%"></div></div>
         </div>
       </div>
       
-      <!-- 네트워크 -->
       <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
         <div class="flex items-center justify-between mb-3">
           <span class="text-lg">📶</span>
@@ -323,18 +321,13 @@
         </div>
         <h4 class="font-bold mb-1">유무선 네트워크</h4>
         <p class="text-emerald-400 font-medium mb-2">8억원</p>
-        <p class="text-sm text-slate-400">담당: 이성호</p>
+        <p class="text-sm text-slate-400">담당: 임혁</p>
         <div class="mt-3">
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>진행률</span><span>100%</span>
-          </div>
-          <div class="h-2 bg-slate-700 rounded-full">
-            <div class="h-full bg-emerald-500 rounded-full" style="width:100%"></div>
-          </div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1"><span>진행률</span><span>100%</span></div>
+          <div class="h-2 bg-slate-700 rounded-full"><div class="h-full bg-emerald-500 rounded-full" style="width:100%"></div></div>
         </div>
       </div>
       
-      <!-- 디지털OASIS -->
       <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
         <div class="flex items-center justify-between mb-3">
           <span class="text-lg">📱</span>
@@ -342,18 +335,13 @@
         </div>
         <h4 class="font-bold mb-1">디지털OASIS 정보관리</h4>
         <p class="text-emerald-400 font-medium mb-2">25억원</p>
-        <p class="text-sm text-slate-400">담당: 임혁</p>
+        <p class="text-sm text-slate-400">담당: 김주용</p>
         <div class="mt-3">
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>진행률</span><span>60%</span>
-          </div>
-          <div class="h-2 bg-slate-700 rounded-full">
-            <div class="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style="width:60%"></div>
-          </div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1"><span>진행률</span><span>60%</span></div>
+          <div class="h-2 bg-slate-700 rounded-full"><div class="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full" style="width:60%"></div></div>
         </div>
       </div>
       
-      <!-- AI관제 -->
       <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
         <div class="flex items-center justify-between mb-3">
           <span class="text-lg">🤖</span>
@@ -361,18 +349,13 @@
         </div>
         <h4 class="font-bold mb-1">AI통합관제 플랫폼</h4>
         <p class="text-emerald-400 font-medium mb-2">16억원</p>
-        <p class="text-sm text-slate-400">담당: 김주용</p>
+        <p class="text-sm text-slate-400">담당: 이성호</p>
         <div class="mt-3">
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>진행률</span><span>75%</span>
-          </div>
-          <div class="h-2 bg-slate-700 rounded-full">
-            <div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width:75%"></div>
-          </div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1"><span>진행률</span><span>75%</span></div>
+          <div class="h-2 bg-slate-700 rounded-full"><div class="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full" style="width:75%"></div></div>
         </div>
       </div>
       
-      <!-- OASIS SPOT -->
       <div class="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
         <div class="flex items-center justify-between mb-3">
           <span class="text-lg">🏙️</span>
@@ -380,14 +363,10 @@
         </div>
         <h4 class="font-bold mb-1">디지털OASIS SPOT</h4>
         <p class="text-emerald-400 font-medium mb-2">35억원</p>
-        <p class="text-sm text-slate-400">담당: 임혁</p>
+        <p class="text-sm text-slate-400">담당: 김주용</p>
         <div class="mt-3">
-          <div class="flex justify-between text-xs text-slate-400 mb-1">
-            <span>진행률</span><span>50%</span>
-          </div>
-          <div class="h-2 bg-slate-700 rounded-full">
-            <div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" style="width:50%"></div>
-          </div>
+          <div class="flex justify-between text-xs text-slate-400 mb-1"><span>진행률</span><span>50%</span></div>
+          <div class="h-2 bg-slate-700 rounded-full"><div class="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full" style="width:50%"></div></div>
         </div>
       </div>
     </div>
@@ -423,7 +402,7 @@
       <span class="font-medium">11.9% (₩20.9억 / ₩176.3억)</span>
     </div>
     <div class="h-4 bg-slate-700 rounded-full overflow-hidden">
-      <div class="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-full transition-all duration-1000" style="width: 11.9%"></div>
+      <div class="h-full bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 rounded-full" style="width: 11.9%"></div>
     </div>
     
     <div class="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30">
@@ -459,7 +438,7 @@
           <span class="px-2 py-1 rounded bg-orange-500/20 text-orange-400 text-xs">High</span>
         </div>
         <p class="text-sm text-slate-400">우선순위 발주, 대안 업체 확보</p>
-        <p class="text-xs text-slate-500 mt-2">담당: 이성호</p>
+        <p class="text-xs text-slate-500 mt-2">담당: 임혁</p>
       </div>
       
       <div class="p-4 rounded-xl bg-orange-500/10 border-l-4 border-orange-500">
@@ -468,7 +447,7 @@
           <span class="px-2 py-1 rounded bg-orange-500/20 text-orange-400 text-xs">High</span>
         </div>
         <p class="text-sm text-slate-400">협상기한 연장, 대안 검토</p>
-        <p class="text-xs text-slate-500 mt-2">담당: 김주용</p>
+        <p class="text-xs text-slate-500 mt-2">담당: 이성호</p>
       </div>
       
       <div class="p-4 rounded-xl bg-amber-500/10 border-l-4 border-amber-500">
@@ -477,60 +456,105 @@
           <span class="px-2 py-1 rounded bg-amber-500/20 text-amber-400 text-xs">Medium</span>
         </div>
         <p class="text-sm text-slate-400">국토부 협의 강화</p>
-        <p class="text-xs text-slate-500 mt-2">담당: 임혁</p>
+        <p class="text-xs text-slate-500 mt-2">담당: 김주용</p>
       </div>
     </div>
   </div>
 
-  <!-- 담당자 현황 -->
+  <!-- 담당자별 책임 영역 (Notion v3.0과 정확히 일치) -->
   <div class="glass rounded-2xl p-6">
     <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
       <i class="fas fa-user-tie text-purple-400"></i>담당자별 책임 영역
+      <span class="text-sm font-normal text-slate-400">(Notion v3.0 기준)</span>
     </h3>
     
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div class="p-5 rounded-xl bg-slate-800/50">
-        <div class="text-lg font-bold mb-1">김주용</div>
-        <div class="text-xs text-cyan-400 mb-3">PM · 사업 총괄</div>
-        <div class="space-y-1 text-sm">
-          <div class="flex justify-between"><span class="text-slate-400">자산</span><span>6개</span></div>
+      <!-- 이성호 PM -->
+      <div class="p-5 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 border border-cyan-500/30">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
+            <i class="fas fa-crown text-cyan-400 text-sm"></i>
+          </div>
+          <div>
+            <div class="text-lg font-bold">이성호</div>
+            <div class="text-xs text-cyan-400">PM · 사업 총괄</div>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm mt-3">
+          <div class="flex justify-between"><span class="text-slate-400">기존 자산</span><span>6개</span></div>
           <div class="flex justify-between"><span class="text-slate-400">금액</span><span>₩2.8M</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">예산</span><span class="text-emerald-400">₩34억</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">관리 예산</span><span class="text-emerald-400 font-bold">₩34억</span></div>
         </div>
-        <div class="mt-3 text-xs text-slate-500">AI관제, 이노베이션</div>
+        <div class="mt-3 pt-3 border-t border-slate-700">
+          <div class="text-xs text-slate-400">신규 프로젝트</div>
+          <div class="text-sm font-medium text-cyan-400">AI관제, 이노베이션</div>
+        </div>
       </div>
       
-      <div class="p-5 rounded-xl bg-slate-800/50">
-        <div class="text-lg font-bold mb-1">이성호</div>
-        <div class="text-xs text-blue-400 mb-3">기술/인프라</div>
-        <div class="space-y-1 text-sm">
-          <div class="flex justify-between"><span class="text-slate-400">자산</span><span>15개</span></div>
+      <!-- 임혁 -->
+      <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-server text-blue-400 text-sm"></i>
+          </div>
+          <div>
+            <div class="text-lg font-bold">임혁</div>
+            <div class="text-xs text-blue-400">기술/인프라</div>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm mt-3">
+          <div class="flex justify-between"><span class="text-slate-400">기존 자산</span><span>15개</span></div>
           <div class="flex justify-between"><span class="text-slate-400">금액</span><span>₩10.6M</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">예산</span><span class="text-emerald-400">₩40억</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">관리 예산</span><span class="text-emerald-400 font-bold">₩40억</span></div>
         </div>
-        <div class="mt-3 text-xs text-slate-500">SDDC, 네트워크</div>
+        <div class="mt-3 pt-3 border-t border-slate-700">
+          <div class="text-xs text-slate-400">신규 프로젝트</div>
+          <div class="text-sm font-medium text-blue-400">SDDC, 네트워크</div>
+        </div>
       </div>
       
-      <div class="p-5 rounded-xl bg-slate-800/50">
-        <div class="text-lg font-bold mb-1">임혁</div>
-        <div class="text-xs text-purple-400 mb-3">계약/행정</div>
-        <div class="space-y-1 text-sm">
-          <div class="flex justify-between"><span class="text-slate-400">자산</span><span>23개</span></div>
+      <!-- 김주용 -->
+      <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <i class="fas fa-file-contract text-purple-400 text-sm"></i>
+          </div>
+          <div>
+            <div class="text-lg font-bold">김주용</div>
+            <div class="text-xs text-purple-400">계약/행정</div>
+          </div>
+        </div>
+        <div class="space-y-1 text-sm mt-3">
+          <div class="flex justify-between"><span class="text-slate-400">기존 자산</span><span>23개</span></div>
           <div class="flex justify-between"><span class="text-slate-400">금액</span><span>₩5.8M</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">예산</span><span class="text-emerald-400">₩87억</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">관리 예산</span><span class="text-emerald-400 font-bold">₩87억</span></div>
         </div>
-        <div class="mt-3 text-xs text-slate-500">OASIS, SPOT</div>
+        <div class="mt-3 pt-3 border-t border-slate-700">
+          <div class="text-xs text-slate-400">신규 프로젝트</div>
+          <div class="text-sm font-medium text-purple-400">OASIS, SPOT</div>
+        </div>
       </div>
       
-      <div class="p-5 rounded-xl bg-slate-800/50">
-        <div class="text-lg font-bold mb-1">함정영</div>
-        <div class="text-xs text-amber-400 mb-3">구매/입찰</div>
-        <div class="space-y-1 text-sm">
-          <div class="flex justify-between"><span class="text-slate-400">자산</span><span>-</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">금액</span><span>-</span></div>
-          <div class="flex justify-between"><span class="text-slate-400">예산</span><span class="text-emerald-400">₩10억</span></div>
+      <!-- 함정영 -->
+      <div class="p-5 rounded-xl bg-slate-800/50 border border-slate-700">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-8 h-8 rounded-full bg-amber-500/20 flex items-center justify-center">
+            <i class="fas fa-shopping-cart text-amber-400 text-sm"></i>
+          </div>
+          <div>
+            <div class="text-lg font-bold">함정영</div>
+            <div class="text-xs text-amber-400">구매/입찰</div>
+          </div>
         </div>
-        <div class="mt-3 text-xs text-slate-500">DRT, 입찰관리</div>
+        <div class="space-y-1 text-sm mt-3">
+          <div class="flex justify-between"><span class="text-slate-400">기존 자산</span><span>-</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">금액</span><span>-</span></div>
+          <div class="flex justify-between"><span class="text-slate-400">관리 예산</span><span class="text-emerald-400 font-bold">₩10억</span></div>
+        </div>
+        <div class="mt-3 pt-3 border-t border-slate-700">
+          <div class="text-xs text-slate-400">신규 프로젝트</div>
+          <div class="text-sm font-medium text-amber-400">DRT, 입찰관리</div>
+        </div>
       </div>
     </div>
   </div>
@@ -573,11 +597,11 @@ document.getElementById('lastUpdate').textContent = now.toLocaleString('ko-KR', 
   hour: '2-digit', minute: '2-digit'
 }) + ' KST';
 
-// 카테고리별 차트
+// 카테고리별 차트 (Notion v3.0 데이터)
 new Chart(document.getElementById('categoryChart'), {
   type: 'doughnut',
   data: {
-    labels: ['영상음향장비 (29개)', '전시장비 (6개)', '네트워크장비 (6개)', '기타장비 (3개)'],
+    labels: ['영상음향장비 (29개, 75.5%)', '전시장비 (6개, 12.7%)', '네트워크장비 (6개, 8.2%)', '기타장비 (3개, 3.6%)'],
     datasets: [{
       data: [29, 6, 6, 3],
       backgroundColor: ['#06b6d4', '#8b5cf6', '#3b82f6', '#6b7280'],
@@ -591,21 +615,21 @@ new Chart(document.getElementById('categoryChart'), {
     plugins: {
       legend: {
         position: 'bottom',
-        labels: { color: '#94a3b8', padding: 15, usePointStyle: true }
+        labels: { color: '#94a3b8', padding: 15, usePointStyle: true, font: { size: 11 } }
       }
     },
     cutout: '65%'
   }
 });
 
-// 담당자별 차트
+// 담당자별 차트 (Notion v3.0 데이터 - 정확한 수치)
 new Chart(document.getElementById('managerChart'), {
   type: 'bar',
   data: {
-    labels: ['임혁', '이성호', '김주용'],
+    labels: ['김주용 (계약/행정)', '임혁 (기술/인프라)', '이성호 (PM)'],
     datasets: [
       {
-        label: '자산 수',
+        label: '자산 수 (개)',
         data: [23, 15, 6],
         backgroundColor: '#06b6d4',
         borderRadius: 8,
