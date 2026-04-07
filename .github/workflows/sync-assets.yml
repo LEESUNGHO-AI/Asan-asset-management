@@ -2,8 +2,8 @@ name: Sync Asset Management from Notion
 
 on:
   schedule:
-    - cron: '*/30 * * * *'  # 30분마다
-  workflow_dispatch:  # 수동 실행
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -18,13 +18,24 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Sync Notion → assets.json
+      - name: Create data directory
+        run: mkdir -p data
+
+      - name: Sync Notion to JSON
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DB_ID: '2aa50aa9577d81ee9cd0e7e63b3fdf25'
-        run: python scripts/sync_notion.py
+        run: |
+          if [ -z "$NOTION_TOKEN" ]; then
+            echo "❌ NOTION_TOKEN secret is not set!"
+            echo "Go to: Settings → Secrets and variables → Actions → New repository secret"
+            echo "Name: NOTION_TOKEN"
+            echo "Value: your Notion integration token (ntn_...)"
+            exit 1
+          fi
+          python scripts/sync_notion.py
 
-      - name: Commit & Push
+      - name: Commit and Push
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "actions@github.com"
@@ -32,6 +43,6 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "🔄 자산관리 데이터 동기화 $(date +'%Y-%m-%d %H:%M KST')"
+            git commit -m "🔄 자산관리 데이터 동기화 $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
             git push
           fi
