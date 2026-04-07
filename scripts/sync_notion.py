@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
 아산시 스마트시티 자산관리 Notion → GitHub Pages 동기화
-Notion 📦 자산관리 마스터 DB → data/assets.json
-
-v1.0 | 2026-04-07
+Notion 자산관리 마스터 DB → data/assets.json
+v1.1 | 2026-04-07
 """
 
-import json, os, urllib.request, urllib.error, time
+import json, os, sys, time
 from datetime import datetime, timezone, timedelta
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 NOTION_TOKEN = os.environ.get('NOTION_TOKEN', '')
 NOTION_DB_ID = os.environ.get('NOTION_DB_ID', '2aa50aa9577d81ee9cd0e7e63b3fdf25')
@@ -15,31 +16,44 @@ NOTION_API = 'https://api.notion.com/v1'
 KST = timezone(timedelta(hours=9))
 OUTPUT_PATH = 'data/assets.json'
 
+
 def notion_request(method, path, body=None):
     url = f'{NOTION_API}{path}'
     data = json.dumps(body).encode() if body else None
-    req = urllib.request.Request(url, data=data, method=method)
+    req = Request(url, data=data, method=method)
     req.add_header('Authorization', f'Bearer {NOTION_TOKEN}')
     req.add_header('Notion-Version', '2022-06-28')
     req.add_header('Content-Type', 'application/json')
 
     for attempt in range(3):
         try:
-            with urllib.request.urlopen(req, timeout=30) as res:
+            with urlopen(req, timeout=30) as res:
                 return json.loads(res.read().decode())
-        except urllib.error.HTTPError as e:
+        except HTTPError as e:
             if e.code == 429:
                 wait = 3 * (attempt + 1)
                 print(f'  Rate limited, waiting {wait}s...')
                 time.sleep(wait)
                 continue
-            body_text = e.read().decode() if e.fp else ''
-            raise Exception(f'HTTP {e.code}: {body_text}')
+            body_text = ''
+            try:
+                body_text = e.read().decode()
+            except:
+                pass
+            print(f'  HTTP {e.code}: {body_text[:200]}')
+            raise
+        except URLError as e:
+            print(f'  Network error: {e.reason}')
+            if attempt < 2:
+                time.sleep(3)
+                continue
+            raise
     raise Exception('Max retries exceeded')
+
 
 def extract_text(prop, prop_type):
     if not prop:
-        return ''
+        return '' if prop_type in ('title', 'rich_text', 'select') else None
     if prop_type == 'title':
         return ''.join(t.get('plain_text', '') for t in prop.get('title', []))
     if prop_type == 'rich_text':
@@ -61,8 +75,8 @@ def extract_text(prop, prop_type):
         return uid.get('number')
     return None
 
+
 def fetch_all_assets():
-    """Notion DB에서 전체 자산 조회 (페이지네이션)"""
     assets = []
     cursor = None
     page = 0
@@ -121,18 +135,16 @@ def fetch_all_assets():
 
     return assets
 
+
 def compute_summary(assets):
-    """대시보드용 요약 통계 계산"""
     total = len(assets)
     total_value = sum(a.get('구매금액') or 0 for a in assets)
 
-    # 상태별
     status_count = {}
     for a in assets:
         s = a.get('사용상태') or '미지정'
         status_count[s] = status_count.get(s, 0) + 1
 
-    # 분류별
     category_count = {}
     category_value = {}
     for a in assets:
@@ -140,13 +152,11 @@ def compute_summary(assets):
         category_count[c] = category_count.get(c, 0) + 1
         category_value[c] = category_value.get(c, 0) + (a.get('구매금액') or 0)
 
-    # 담당자별
     manager_count = {}
     for a in assets:
         m = a.get('관리담당자') or '미지정'
         manager_count[m] = manager_count.get(m, 0) + 1
 
-    # 위치별
     location_count = {}
     for a in assets:
         loc = a.get('설치위치') or '미배치'
@@ -162,25 +172,35 @@ def compute_summary(assets):
         'by_location': location_count,
     }
 
+
 def main():
     if not NOTION_TOKEN:
         print('❌ NOTION_TOKEN 환경변수가 설정되지 않았습니다.')
-        return
+        print('GitHub: Settings → Secrets and variables → Actions → New repository secret')
+        print('Name: NOTION_TOKEN / Value: ntn_...')
+        sys.exit(1)
 
     print('=== 아산시 자산관리 Notion → JSON 동기화 ===')
+    print(f'DB ID: {NOTION_DB_ID}')
+    print(f'Token: {NOTION_TOKEN[:12]}...')
 
     # 1. Notion에서 전체 자산 조회
-    print('📦 Notion DB 조회 중...')
-    assets = fetch_all_assets()
+    print('\n📦 Notion DB 조회 중...')
+    try:
+        assets = fetch_all_assets()
+    except Exception as e:
+        print(f'❌ Notion API 오류: {e}')
+        sys.exit(1)
+
     print(f'  → {len(assets)}건 조회 완료')
 
-    # 2. 비자산 항목 필터링 (Claude 링크, GitHub 링크 등)
+    # 2. 비자산 항목 필터링
     filtered = []
     skip_keywords = ['Claude', 'GitHub', 'LEESUNGHO-AI', 'Slack #']
     for a in assets:
         name = a.get('자산명', '')
         if any(kw in name for kw in skip_keywords):
-            print(f'  ⏭️ 비자산 항목 스킵: {name}')
+            print(f'  ⏭️ 스킵: {name}')
             continue
         if not name.strip():
             continue
@@ -188,26 +208,27 @@ def main():
 
     print(f'  → {len(filtered)}건 유효 자산')
 
-    # 3. 요약 통계 계산
+    # 3. 요약 통계
     summary = compute_summary(filtered)
 
     # 4. JSON 출력
     output = {
         'meta': {
             'synced_at': datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S KST'),
-            'source': 'Notion 📦 자산관리 마스터 DB',
+            'source': 'Notion 자산관리 마스터 DB',
             'notion_db': f'https://www.notion.so/{NOTION_DB_ID.replace("-", "")}',
-            'version': '1.0',
+            'version': '1.1',
         },
         'summary': summary,
         'assets': filtered,
     }
 
-    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+    os.makedirs(os.path.dirname(OUTPUT_PATH) or '.', exist_ok=True)
     with open(OUTPUT_PATH, 'w', encoding='utf-8') as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    print(f'✅ {OUTPUT_PATH} 생성 완료 ({len(filtered)}건, {summary["total_value"]:,.0f}원)')
+    print(f'\n✅ {OUTPUT_PATH} 생성 완료 ({len(filtered)}건, ₩{summary["total_value"]:,.0f})')
+
 
 if __name__ == '__main__':
     main()
