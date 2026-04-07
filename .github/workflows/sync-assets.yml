@@ -1,1 +1,37 @@
-1
+name: Sync Asset Management from Notion
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # 30분마다
+  workflow_dispatch:  # 수동 실행
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync Notion → assets.json
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: '2aa50aa9577d81ee9cd0e7e63b3fdf25'
+        run: python scripts/sync_notion.py
+
+      - name: Commit & Push
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add data/assets.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "🔄 자산관리 데이터 동기화 $(date +'%Y-%m-%d %H:%M KST')"
+            git push
+          fi
