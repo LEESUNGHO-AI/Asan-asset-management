@@ -57,20 +57,127 @@ a:hover{text-decoration:underline}
 .notion-link{display:inline-flex;align-items:center;gap:4px;background:rgba(0,184,230,.1);border:1px solid rgba(0,184,230,.2);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--accent2);margin-bottom:16px;text-decoration:none}
 .notion-link:hover{background:rgba(0,184,230,.2);text-decoration:none}
 .pill{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;background:rgba(139,92,246,.15);color:var(--purple)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/*  [v5.1 추가] 탭 네비게이션 + 자산코드 라벨 출력 UI                       */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--card-b);margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 20px;background:transparent;border:none;color:var(--t2);cursor:pointer;font-size:13px;font-family:inherit;font-weight:500;border-bottom:2px solid transparent;transition:.15s;display:flex;align-items:center;gap:6px}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:hover:not(.active){color:var(--t1);background:rgba(255,255,255,.02)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.print-toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search-input,.select-input,.text-input{background:var(--card);border:1px solid var(--card-b);color:var(--t1);padding:8px 12px;border-radius:8px;font-size:13px;font-family:inherit}
+.search-input{flex:1;min-width:220px}
+.btn{padding:8px 16px;border-radius:8px;border:1px solid var(--card-b);background:var(--card);color:var(--t1);cursor:pointer;font-size:13px;font-family:inherit;font-weight:500;transition:.15s;display:inline-flex;align-items:center;gap:6px}
+.btn.primary{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.btn.primary:hover{background:#00b894}
+.btn:hover:not(:disabled){transform:translateY(-1px)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-small{padding:4px 10px;font-size:11px}
+.checkbox-cell{width:30px;text-align:center}
+.checkbox-cell input{cursor:pointer;width:14px;height:14px;accent-color:var(--accent)}
+.code-cell{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);font-weight:600}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:var(--bg);border:1px solid var(--card-b);border-radius:16px;max-width:640px;width:100%;padding:24px;max-height:90vh;overflow-y:auto}
+.modal h3{font-size:15px;font-weight:600;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.modal .close-btn{background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer}
+.label-preview{display:flex;gap:20px;background:#fff;color:#000;padding:20px;border-radius:10px;margin:16px 0;align-items:center;border:1px dashed #ddd}
+#qrcode-canvas{width:140px;height:140px;flex-shrink:0;background:#fff}
+.label-text{font-family:'JetBrains Mono','D2Coding',monospace;font-size:11px;line-height:1.55;color:#000;flex:1}
+.label-text .header-line{color:#666;font-size:10px}
+.label-text .code{font-size:14px;font-weight:700;margin:4px 0;color:#000}
+.label-text .name{font-size:12px;color:#222}
+.label-text .loc{font-size:10px;color:#888;margin-top:2px}
+.label-text .footer-line{margin-top:8px;color:#888;font-size:9px;border-top:1px solid #eee;padding-top:4px}
+.form-row{display:flex;gap:10px;margin-bottom:10px;align-items:center}
+.form-row label{width:100px;font-size:12px;color:var(--t2);flex-shrink:0}
+.form-row .text-input,.form-row .select-input{flex:1}
+.log-area{margin-top:12px;padding:10px 12px;background:#05070d;border:1px solid var(--card-b);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3);max-height:120px;overflow-y:auto;white-space:pre-wrap}
+.log-area .ok{color:var(--accent)}
+.log-area .warn{color:var(--warn)}
+.log-area .err{color:var(--danger)}
+.modal-actions{display:flex;gap:10px;margin-top:16px;justify-content:flex-end;flex-wrap:wrap}
+.help-box{background:rgba(0,184,230,.06);border:1px solid rgba(0,184,230,.15);border-radius:8px;padding:12px;font-size:11px;color:var(--t2);line-height:1.7;margin-top:14px}
+.help-box code{font-family:'JetBrains Mono',monospace;background:rgba(255,255,255,.05);padding:1px 5px;border-radius:3px;font-size:10px}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
     <h1>아산시 강소형 스마트시티</h1>
-    <p>자산관리 통합 대시보드 v5.0</p>
+    <p>자산관리 통합 대시보드 v5.1</p>
     <a class="notion-link" href="https://www.notion.so/2aa50aa9577d81ee9cd0e7e63b3fdf25" target="_blank">Notion DB 열기 →</a>
     <div class="sync-badge"><span class="dot"></span> <span id="sync-time">동기화 중...</span></div>
     <p style="margin-top:8px;font-size:11px;color:var(--t3)">Slack #자산관리대장 → GAS → Notion DB → GitHub Pages</p>
   </header>
 
-  <div id="app">
-    <div class="loading"><div class="spinner"></div>데이터 로드 중...</div>
+  <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━ 탭 네비게이션 ━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="dashboard" role="tab">📊 대시보드</button>
+    <button class="tab" data-tab="print" role="tab">🏷️ 자산코드 라벨 출력</button>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━ Tab 1 : 기존 대시보드 (그대로 유지) ━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tab-content active" id="tab-dashboard">
+    <div id="app">
+      <div class="loading"><div class="spinner"></div>데이터 로드 중...</div>
+    </div>
+  </div>
+
+  <!-- ━━━━━━━━━━━━━━━━━━━━ Tab 2 : 자산코드 라벨 출력 (신규) ━━━━━━━━━━━━━━━━━━━━ -->
+  <div class="tab-content" id="tab-print">
+    <div class="panel">
+      <h3><span class="icon" style="background:rgba(0,212,170,.15)">🏷️</span>자산 라벨 출력 — Brother / Zebra 프린터 연동</h3>
+
+      <div class="print-toolbar">
+        <input class="search-input" id="search" placeholder="🔍 자산명·자산코드 검색...">
+        <select class="select-input" id="filter-cat">
+          <option value="">전체 분류</option>
+        </select>
+        <select class="select-input" id="printer-type" title="라벨 프린터 종류">
+          <option value="brother">Brother QL-1110NWB / QL-820NWB</option>
+          <option value="zebra">Zebra ZD420 / ZD620</option>
+        </select>
+        <button class="btn" id="btn-manual">+ 수동 입력</button>
+        <button class="btn primary" id="btn-bulk-print" disabled>🖨 선택 일괄 인쇄 (<span id="sel-count">0</span>)</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="checkbox-cell"><input type="checkbox" id="check-all"></th>
+              <th>표준 자산코드</th>
+              <th>자산명</th>
+              <th>분류</th>
+              <th>위치</th>
+              <th>담당자</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="print-table">
+            <tr><td colspan="7" class="loading" style="padding:32px">자산 데이터 로딩 중...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p id="print-summary" style="font-size:11px;color:var(--t3);margin-top:10px"></p>
+
+      <div class="help-box">
+        <strong style="color:var(--t1)">📌 자산코드 체계</strong>
+        : <code>ASAN-SC-{단위사업}-{비목}-{연도}-{일련번호}</code> · 예시 <code>ASAN-SC-U05-810-2026-0001</code><br>
+        <strong style="color:var(--t1)">🖨 프린터 설치</strong>
+        : Brother는
+        <a href="https://www.brother.co.jp/eng/dev/bpac/" target="_blank">b-PAC Client 3.4+</a>
+        와 <code>asset_label.lbx</code> 템플릿이 PC에 설치되어야 합니다.
+        Zebra는 <a href="https://www.zebra.com/browserprint" target="_blank">Browser Print</a> 실행 필요 (HTTPS 자가서명 인증서 1회 신뢰).<br>
+        <strong style="color:var(--t1)">📷 QR 페이로드</strong>
+        : <code>https://leesungho-ai.github.io/Asan-asset-management/?id={자산코드}</code> → 스마트폰 카메라로 자산 상세 확인.
+      </div>
+    </div>
   </div>
 
   <div class="footer">
@@ -81,49 +188,98 @@ a:hover{text-decoration:underline}
   </div>
 </div>
 
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 라벨 미리보기 모달 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="modal-overlay" id="preview-modal">
+  <div class="modal">
+    <h3>🏷️ 라벨 미리보기 <button class="close-btn" onclick="closeModal()">✕</button></h3>
+
+    <div class="form-row">
+      <label>자산코드</label>
+      <input class="text-input" id="m-code" placeholder="ASAN-SC-U05-810-2026-0001">
+    </div>
+    <div class="form-row">
+      <label>자산명</label>
+      <input class="text-input" id="m-name" placeholder="자산명 입력">
+    </div>
+    <div class="form-row">
+      <label>설치장소</label>
+      <input class="text-input" id="m-loc" placeholder="(예) 이노베이션 스퀘어 B1">
+    </div>
+    <div class="form-row">
+      <label>QR URL</label>
+      <input class="text-input" id="m-qr" readonly>
+    </div>
+
+    <div class="label-preview">
+      <canvas id="qrcode-canvas"></canvas>
+      <div class="label-text">
+        <div class="header-line">아산시 강소형 스마트시티</div>
+        <div class="code" id="p-code">—</div>
+        <div class="name" id="p-name">—</div>
+        <div class="loc" id="p-loc">—</div>
+        <div class="footer-line">제일엔지니어링 PMO · 보조금 자산</div>
+      </div>
+    </div>
+
+    <div class="log-area" id="log">준비 완료 — 「인쇄」 버튼을 누르면 프린터로 전송됩니다.</div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">취소</button>
+      <button class="btn" id="btn-refresh-qr">🔄 QR 갱신</button>
+      <button class="btn primary" id="btn-print-now">🖨 인쇄</button>
+    </div>
+  </div>
+</div>
+
+<!-- Brother b-PAC SDK (LAN/USB 프린터 자동 감지) -->
+<script src="https://bpac.brother.co.jp/JsApi/bpac-3.0.min.js"></script>
+<!-- QR 코드 생성 라이브러리 -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
 <script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// [기존] 대시보드 로직 — 변경 없음
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const COLORS = ['#00d4aa','#00b8e6','#ffb800','#8b5cf6','#ff4757','#3b82f6','#f472b6','#a78bfa'];
 const WON = v => v >= 1e8 ? (v/1e8).toFixed(1)+'억' : v >= 1e4 ? (v/1e4).toFixed(0)+'만' : v.toLocaleString();
+
+let GLOBAL_DATA = null;  // [v5.1] 라벨 탭에서 재사용
 
 async function init() {
   try {
     const res = await fetch('data/assets.json');
     if (!res.ok) throw new Error('HTTP '+res.status);
     const data = await res.json();
+    GLOBAL_DATA = data;          // [v5.1] 캐시
     render(data);
+    renderPrintTab(data);        // [v5.1] 라벨 탭 초기화
   } catch(e) {
     document.getElementById('app').innerHTML =
       '<div class="loading" style="color:var(--danger)">데이터 로드 실패: '+e.message+'<br><small>data/assets.json 파일을 확인하세요.</small></div>';
+    document.getElementById('print-table').innerHTML =
+      '<tr><td colspan="7" class="loading" style="color:var(--danger)">데이터 로드 실패</td></tr>';
   }
 }
 
 function render(data) {
   const {meta, summary, assets} = data;
   const s = summary;
-
   document.getElementById('sync-time').textContent = meta.synced_at || '-';
 
   const activeCount = (s.by_status['사용중']||0);
   const waitCount = (s.by_status['대기중']||0);
 
   let html = '';
-
-  // KPI
   html += '<div class="kpi-grid">';
   html += kpi('총 관리 자산', s.total_assets+'개', `사용중 ${activeCount} · 대기 ${waitCount}`, 'accent');
   html += kpi('총 자산가치', '₩'+WON(s.total_value), '취득가액 기준', 'blue');
-
   const catKeys = Object.keys(s.by_category||{});
   html += kpi('자산 분류', catKeys.length+'종', catKeys.join(', '), 'purple');
-
   const mgrKeys = Object.keys(s.by_manager||{}).filter(k=>k!=='미지정');
   html += kpi('관리 담당자', mgrKeys.length+'명', mgrKeys.join(', '), 'warn');
   html += '</div>';
 
-  // Charts row
   html += '<div class="grid-2">';
-
-  // 자산분류별
   html += '<div class="panel"><h3><span class="icon" style="background:rgba(0,212,170,.15)">📊</span>자산 분류별 현황</h3>';
   html += '<div class="bar-chart">';
   const catEntries = Object.entries(s.by_category||{}).sort((a,b)=>b[1]-a[1]);
@@ -135,7 +291,6 @@ function render(data) {
   });
   html += '</div></div>';
 
-  // 담당자별
   html += '<div class="panel"><h3><span class="icon" style="background:rgba(139,92,246,.15)">👤</span>담당자별 자산 현황</h3>';
   html += '<div class="donut-wrap">';
   Object.entries(s.by_manager||{}).filter(([k])=>k!=='미지정').sort((a,b)=>b[1]-a[1]).forEach(([k,v],i) => {
@@ -144,7 +299,6 @@ function render(data) {
   html += '</div></div>';
   html += '</div>';
 
-  // 위치별
   html += '<div class="grid-2">';
   html += '<div class="panel"><h3><span class="icon" style="background:rgba(59,130,246,.15)">📍</span>설치 위치별</h3>';
   html += '<div class="bar-chart">';
@@ -155,7 +309,6 @@ function render(data) {
   });
   html += '</div></div>';
 
-  // 상태별
   html += '<div class="panel"><h3><span class="icon" style="background:rgba(255,184,0,.15)">⚡</span>자산 상태 현황</h3>';
   html += '<div class="donut-wrap" style="margin-top:12px">';
   Object.entries(s.by_status||{}).sort((a,b)=>b[1]-a[1]).forEach(([k,v],i) => {
@@ -165,13 +318,11 @@ function render(data) {
   html += '</div></div>';
   html += '</div>';
 
-  // Asset table
   html += '<div class="panel" style="margin-top:16px"><h3><span class="icon" style="background:rgba(0,184,230,.15)">📦</span>자산관리 마스터 DB (Notion 연동)</h3>';
   html += '<a class="notion-link" href="https://www.notion.so/2aa50aa9577d81ee9cd0e7e63b3fdf25" target="_blank" style="margin-bottom:8px">전체 보기 (Notion) →</a>';
   html += '<div class="table-wrap"><table><thead><tr>';
   html += '<th>코드</th><th>자산명</th><th>분류</th><th>담당자</th><th>상태</th><th>위치</th><th>금액</th>';
   html += '</tr></thead><tbody>';
-
   const sorted = [...assets].sort((a,b)=>(a.자산코드||999)-(b.자산코드||999));
   sorted.forEach(a => {
     const status = a.사용상태||'';
@@ -195,7 +346,346 @@ function kpi(label, value, sub, cls) {
   return `<div class="kpi ${cls||''}"><div class="label">${label}</div><div class="value">${value}</div><div class="sub">${sub||''}</div></div>`;
 }
 
-init();
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// [v5.1 신규] 탭 전환 로직
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + name));
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// [v5.1 신규] 자산코드 라벨 출력 탭
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const GH_BASE = 'https://leesungho-ai.github.io/Asan-asset-management';
+
+// 자산분류 → 단위사업코드 매핑
+const UNIT_BY_CATEGORY = {
+  '영상음향장비': 'U05', '전시장비': 'U05',
+  '네트워크장비': 'U05', 'IT장비': 'U05',
+  '교통장비': 'U09', '관제장비': 'U10',
+  '기타장비': 'U00',
+};
+
+// 위치 키워드 → 단위사업코드 추론
+const UNIT_BY_LOCATION = [
+  { kw: ['이노베이션', '스퀘어', '홍보관', 'B1', 'B2'], code: 'U05' },
+  { kw: ['OASIS', '스마트하우스', '도고'], code: 'U06' },
+  { kw: ['무인점포'], code: 'U07' },
+  { kw: ['스마트폴'], code: 'U08' },
+];
+
+function generateStandardCode(asset) {
+  // Notion에 표준자산코드 필드가 있으면 그대로 사용
+  if (asset.표준자산코드) return asset.표준자산코드;
+
+  // 추론: 단위사업 코드
+  let unit = 'U00';
+  const loc = (asset.설치위치 || '').toString();
+  for (const rule of UNIT_BY_LOCATION) {
+    if (rule.kw.some(k => loc.includes(k))) { unit = rule.code; break; }
+  }
+  if (unit === 'U00' && asset.자산분류) {
+    unit = UNIT_BY_CATEGORY[asset.자산분류] || 'U00';
+  }
+
+  // 비목 코드 (기본 810 = 자산)
+  const bimok = '810';
+
+  // 취득연도
+  const dateStr = asset.구매일자 || asset.취득일 || '';
+  const year = (dateStr.match(/^\d{4}/) || [String(new Date().getFullYear())])[0];
+
+  // 일련번호 (기존 numeric 자산코드 활용)
+  const seq = String(asset.자산코드 || 0).padStart(4, '0');
+
+  return `ASAN-SC-${unit}-${bimok}-${year}-${seq}`;
+}
+
+function renderPrintTab(data) {
+  const assets = data.assets || [];
+
+  // 분류 필터 옵션 채우기
+  const cats = [...new Set(assets.map(a => a.자산분류).filter(Boolean))].sort();
+  const filterCat = document.getElementById('filter-cat');
+  cats.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    filterCat.appendChild(opt);
+  });
+
+  // 검색·필터 이벤트
+  document.getElementById('search').addEventListener('input', () => drawPrintRows(assets));
+  document.getElementById('filter-cat').addEventListener('change', () => drawPrintRows(assets));
+
+  // 전체 선택 체크박스
+  document.getElementById('check-all').addEventListener('change', e => {
+    document.querySelectorAll('.row-check').forEach(cb => cb.checked = e.target.checked);
+    updateBulkBtn();
+  });
+
+  document.getElementById('btn-bulk-print').addEventListener('click', bulkPrint);
+  document.getElementById('btn-manual').addEventListener('click', openManualModal);
+
+  drawPrintRows(assets);
+}
+
+function drawPrintRows(assets) {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const cat = document.getElementById('filter-cat').value;
+  const tbody = document.getElementById('print-table');
+
+  const filtered = assets.filter(a => {
+    if (cat && a.자산분류 !== cat) return false;
+    if (q) {
+      const code = generateStandardCode(a).toLowerCase();
+      const hay = `${a.자산명||''} ${a.모델명||''} ${code}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="loading">검색 결과 없음</td></tr>';
+    document.getElementById('print-summary').textContent = '';
+    return;
+  }
+
+  const sorted = [...filtered].sort((a,b)=>(a.자산코드||999)-(b.자산코드||999));
+  let html = '';
+  sorted.forEach((a, idx) => {
+    const code = generateStandardCode(a);
+    const dataAttr = encodeURIComponent(JSON.stringify({
+      code, name: a.자산명 || '', loc: a.설치위치 || '', model: a.모델명 || ''
+    }));
+    html += '<tr>';
+    html += `<td class="checkbox-cell"><input type="checkbox" class="row-check" data-asset="${dataAttr}" onchange="updateBulkBtn()"></td>`;
+    html += `<td class="code-cell">${code}</td>`;
+    html += `<td><strong>${a.자산명||'-'}</strong>${a.모델명?'<br><span style="font-size:10px;color:var(--t3)">'+a.모델명+'</span>':''}</td>`;
+    html += `<td><span class="pill">${a.자산분류||'-'}</span></td>`;
+    html += `<td style="font-size:11px;color:var(--t2)">${a.설치위치||'-'}</td>`;
+    html += `<td style="font-size:11px">${a.관리담당자||'-'}</td>`;
+    html += `<td><button class="btn btn-small primary" data-asset="${dataAttr}" onclick="openPreviewFromBtn(this)">🖨 인쇄</button></td>`;
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+
+  document.getElementById('print-summary').textContent =
+    `${filtered.length} / ${assets.length}개 자산 표시 중 · 행 좌측 체크박스 선택 후 일괄 인쇄 가능`;
+}
+
+function updateBulkBtn() {
+  const count = document.querySelectorAll('.row-check:checked').length;
+  document.getElementById('sel-count').textContent = count;
+  document.getElementById('btn-bulk-print').disabled = count === 0;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// [v5.1 신규] 라벨 미리보기 모달
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+let CURRENT_ASSET = { code:'', name:'', loc:'', qr:'' };
+
+function openPreview(asset) {
+  CURRENT_ASSET = {
+    code: asset.code || '',
+    name: asset.name || '',
+    loc:  asset.loc  || '',
+    qr:   asset.qr   || (GH_BASE + '/?id=' + encodeURIComponent(asset.code || '')),
+  };
+  document.getElementById('m-code').value = CURRENT_ASSET.code;
+  document.getElementById('m-name').value = CURRENT_ASSET.name;
+  document.getElementById('m-loc' ).value = CURRENT_ASSET.loc;
+  document.getElementById('m-qr'  ).value = CURRENT_ASSET.qr;
+  refreshPreview();
+  document.getElementById('preview-modal').classList.add('active');
+  resetLog();
+}
+
+// 행의 「🖨 인쇄」 버튼에서 호출 — data-asset 속성에서 JSON 안전하게 추출
+function openPreviewFromBtn(btn) {
+  try {
+    const asset = JSON.parse(decodeURIComponent(btn.dataset.asset));
+    openPreview(asset);
+  } catch (e) {
+    console.error('자산 데이터 파싱 실패', e);
+  }
+}
+
+function openManualModal() {
+  openPreview({ code:'', name:'', loc:'' });
+}
+
+function closeModal() {
+  document.getElementById('preview-modal').classList.remove('active');
+}
+
+function refreshPreview() {
+  CURRENT_ASSET.code = document.getElementById('m-code').value.trim();
+  CURRENT_ASSET.name = document.getElementById('m-name').value.trim();
+  CURRENT_ASSET.loc  = document.getElementById('m-loc' ).value.trim();
+  CURRENT_ASSET.qr   = GH_BASE + '/?id=' + encodeURIComponent(CURRENT_ASSET.code);
+  document.getElementById('m-qr').value = CURRENT_ASSET.qr;
+
+  document.getElementById('p-code').textContent = CURRENT_ASSET.code || '—';
+  document.getElementById('p-name').textContent = CURRENT_ASSET.name || '—';
+  document.getElementById('p-loc' ).textContent = CURRENT_ASSET.loc  || '—';
+
+  if (typeof QRCode !== 'undefined') {
+    QRCode.toCanvas(document.getElementById('qrcode-canvas'), CURRENT_ASSET.qr || GH_BASE, {
+      width: 140, margin: 1, color: { dark: '#000', light: '#fff' }
+    });
+  }
+}
+
+// 모달 input 변경 시 미리보기 자동 갱신
+document.getElementById('btn-refresh-qr').addEventListener('click', refreshPreview);
+document.getElementById('btn-print-now').addEventListener('click', () => printSingle(CURRENT_ASSET));
+document.getElementById('m-code').addEventListener('input', refreshPreview);
+document.getElementById('m-name').addEventListener('input', refreshPreview);
+document.getElementById('m-loc' ).addEventListener('input', refreshPreview);
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// [v5.1 신규] 인쇄 — Brother b-PAC + Zebra Browser Print
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function log(msg, cls) {
+  const el = document.getElementById('log');
+  const line = document.createElement('div');
+  if (cls) line.className = cls;
+  line.textContent = `[${new Date().toLocaleTimeString('ko-KR')}] ${msg}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+}
+function resetLog() { document.getElementById('log').innerHTML = ''; }
+
+async function printSingle(asset) {
+  const type = document.getElementById('printer-type').value;
+  log(`인쇄 시작 (${type}) — ${asset.code}`);
+  if (type === 'brother') await printBrother(asset);
+  else                    await printZebra(asset);
+}
+
+async function bulkPrint() {
+  const rows = document.querySelectorAll('.row-check:checked');
+  if (rows.length === 0) return;
+  if (!confirm(`${rows.length}건의 라벨을 연속 인쇄하시겠습니까?`)) return;
+
+  const type = document.getElementById('printer-type').value;
+  let ok = 0, fail = 0;
+  for (const cb of rows) {
+    const a = JSON.parse(decodeURIComponent(cb.dataset.asset));
+    a.qr = GH_BASE + '/?id=' + encodeURIComponent(a.code);
+    try {
+      if (type === 'brother') await printBrother(a);
+      else                    await printZebra(a);
+      ok++;
+      await new Promise(r => setTimeout(r, 800));  // 프린터 사이 간격
+    } catch (e) {
+      fail++;
+      console.error('인쇄 실패', a.code, e);
+    }
+  }
+  alert(`일괄 인쇄 완료: 성공 ${ok}건 / 실패 ${fail}건`);
+}
+
+async function printBrother(asset) {
+  if (typeof bpac === 'undefined') {
+    log('Brother b-PAC SDK 로드 실패 — Client 3.4+ 설치 확인 필요', 'err');
+    return;
+  }
+  try {
+    const tmplUrl = GH_BASE + '/asset_label.lbx';
+    const doc = bpac.IDocument;
+    const ok = await doc.Open(tmplUrl);
+    if (!ok) { log('템플릿 열기 실패: ' + tmplUrl, 'err'); return; }
+
+    doc.GetObject('code').Text = asset.code;
+    doc.GetObject('name').Text = asset.name;
+    doc.GetObject('loc').Text  = asset.loc;
+    doc.GetObject('qr').Text   = asset.qr;
+
+    await doc.StartPrint('', bpac.PrintOptionConstants.bpoDefault);
+    await doc.PrintOut(1, bpac.PrintOptionConstants.bpoDefault);
+    await doc.EndPrint();
+    await doc.Close();
+    log('✓ Brother 인쇄 완료 — ' + asset.code, 'ok');
+  } catch (e) {
+    log('Brother 인쇄 실패: ' + e.message, 'err');
+    throw e;
+  }
+}
+
+async function printZebra(asset) {
+  // 62mm × 29mm @ 203 DPI = 496 × 232 dots
+  const safeName = (asset.name || '').substring(0, 28).replace(/[\\^]/g, ' ');
+  const safeLoc  = (asset.loc  || '').substring(0, 32).replace(/[\\^]/g, ' ');
+  const zpl = [
+    '^XA','^PW496','^LL232','^CI28',
+    '^FT20,40^A0N,24,24^FDASAN SMART CITY^FS',
+    `^FT20,75^A0N,28,28^FD${asset.code}^FS`,
+    `^FT20,110^A0N,20,20^FD${safeName}^FS`,
+    `^FT20,140^A0N,16,16^FD${safeLoc}^FS`,
+    '^FT20,175^A0N,14,14^FDJeil Eng. PMO^FS',
+    `^FO340,30^BQN,2,5^FDLA,${asset.qr}^FS`,
+    '^XZ'
+  ].join('\n');
+
+  try {
+    // HTTPS 페이지에서는 Browser Print의 HTTPS 엔드포인트만 사용 가능 (자가서명 인증서 1회 신뢰 필요)
+    const res = await fetch('https://127.0.0.1:9101/write', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        device: { deviceType: 'printer', connection: 'usb' },
+        data: zpl,
+      }),
+    });
+    if (res.ok) { log('✓ Zebra 인쇄 완료 — ' + asset.code, 'ok'); return; }
+    log('Zebra HTTP ' + res.status + ' — ZPL 다운로드로 폴백', 'warn');
+    downloadZpl(zpl, asset.code);
+  } catch (e) {
+    log('Zebra Browser Print 미연결 — ZPL 파일 다운로드로 폴백', 'warn');
+    log('  (' + e.message + ')', 'warn');
+    downloadZpl(zpl, asset.code);
+  }
+}
+
+function downloadZpl(zpl, code) {
+  const blob = new Blob([zpl], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${code || 'label'}.zpl`;
+  a.click();
+  log('↓ ZPL 파일 다운로드 완료 — Zebra Setup Utility로 수동 전송 가능', 'ok');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// [v5.1 신규] URL 파라미터 처리 — Slack 알림 카드 「라벨 출력」 버튼 진입
+//   예시:  index.html?tab=print&code=ASAN-SC-U05-810-2026-0001&name=LED+Wall&loc=B1+홍보관
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function handleUrlParams() {
+  const qs = new URLSearchParams(location.search);
+  const tab = qs.get('tab');
+  const code = qs.get('code');
+
+  if (tab === 'print' || code) {
+    switchTab('print');
+    if (code) {
+      openPreview({
+        code: code,
+        name: qs.get('name') || '',
+        loc:  qs.get('loc')  || '',
+        qr:   qs.get('qr')   || (GH_BASE + '/?id=' + encodeURIComponent(code)),
+      });
+    }
+  }
+}
+
+// 초기 실행
+init().then(handleUrlParams);
 </script>
 </body>
 </html>
