@@ -246,18 +246,37 @@ const WON = v => v >= 1e8 ? (v/1e8).toFixed(1)+'억' : v >= 1e4 ? (v/1e4).toFixe
 let GLOBAL_DATA = null;  // [v5.1] 라벨 탭에서 재사용
 
 async function init() {
+  // 1단계 : 데이터 로드 (실패 시 양쪽 탭 모두 오류 표시)
+  let data;
   try {
     const res = await fetch('data/assets.json');
     if (!res.ok) throw new Error('HTTP '+res.status);
-    const data = await res.json();
-    GLOBAL_DATA = data;          // [v5.1] 캐시
-    render(data);
-    renderPrintTab(data);        // [v5.1] 라벨 탭 초기화
+    data = await res.json();
+    GLOBAL_DATA = data;
   } catch(e) {
     document.getElementById('app').innerHTML =
       '<div class="loading" style="color:var(--danger)">데이터 로드 실패: '+e.message+'<br><small>data/assets.json 파일을 확인하세요.</small></div>';
     document.getElementById('print-table').innerHTML =
       '<tr><td colspan="7" class="loading" style="color:var(--danger)">데이터 로드 실패</td></tr>';
+    return;
+  }
+
+  // 2단계 : 대시보드 렌더 (실패해도 라벨 탭에 영향 X)
+  try {
+    render(data);
+  } catch(e) {
+    console.error('대시보드 렌더 오류:', e);
+    document.getElementById('app').innerHTML =
+      '<div class="loading" style="color:var(--danger)">대시보드 렌더 오류: '+e.message+'</div>';
+  }
+
+  // 3단계 : 라벨 탭 렌더 (실패해도 대시보드에 영향 X)
+  try {
+    renderPrintTab(data);
+  } catch(e) {
+    console.error('라벨 탭 렌더 오류:', e);
+    document.getElementById('print-table').innerHTML =
+      '<tr><td colspan="7" class="loading" style="color:var(--danger)">라벨 탭 렌더 오류: '+e.message+'</td></tr>';
   }
 }
 
@@ -380,30 +399,50 @@ const UNIT_BY_LOCATION = [
 ];
 
 function generateStandardCode(asset) {
-  // Notion에 표준자산코드 필드가 있으면 그대로 사용
-  if (asset.표준자산코드) return asset.표준자산코드;
+  try {
+    // Notion에 표준자산코드 필드가 있으면 그대로 사용
+    if (asset.표준자산코드) return String(asset.표준자산코드);
 
-  // 추론: 단위사업 코드
-  let unit = 'U00';
-  const loc = (asset.설치위치 || '').toString();
-  for (const rule of UNIT_BY_LOCATION) {
-    if (rule.kw.some(k => loc.includes(k))) { unit = rule.code; break; }
+    // 추론: 단위사업 코드
+    let unit = 'U00';
+    const loc = String(asset.설치위치 || '');
+    for (const rule of UNIT_BY_LOCATION) {
+      if (rule.kw.some(k => loc.includes(k))) { unit = rule.code; break; }
+    }
+    if (unit === 'U00' && asset.자산분류) {
+      unit = UNIT_BY_CATEGORY[asset.자산분류] || 'U00';
+    }
+
+    // 비목 코드 (기본 810 = 자산)
+    const bimok = '810';
+
+    // 취득연도 — string / number / Notion {start:"..."} / null 모두 안전 처리
+    let year = String(new Date().getFullYear());
+    const dateRaw = (asset.구매일자 != null ? asset.구매일자 : asset.취득일);
+    if (dateRaw != null && dateRaw !== '') {
+      let dateStr;
+      if (typeof dateRaw === 'string') {
+        dateStr = dateRaw;
+      } else if (typeof dateRaw === 'number') {
+        dateStr = new Date(dateRaw).toISOString();
+      } else if (typeof dateRaw === 'object' && dateRaw.start) {
+        dateStr = String(dateRaw.start);
+      } else {
+        dateStr = String(dateRaw);
+      }
+      const m = dateStr.match(/(\d{4})/);
+      if (m) year = m[1];
+    }
+
+    // 일련번호 (기존 numeric 자산코드 활용)
+    const seq = String(asset.자산코드 != null ? asset.자산코드 : 0).padStart(4, '0');
+    return `ASAN-SC-${unit}-${bimok}-${year}-${seq}`;
+  } catch (e) {
+    console.warn('generateStandardCode 실패, fallback 적용:', e, asset);
+    const fallbackYear = new Date().getFullYear();
+    const fallbackSeq = String(asset && asset.자산코드 != null ? asset.자산코드 : 0).padStart(4, '0');
+    return `ASAN-SC-U00-810-${fallbackYear}-${fallbackSeq}`;
   }
-  if (unit === 'U00' && asset.자산분류) {
-    unit = UNIT_BY_CATEGORY[asset.자산분류] || 'U00';
-  }
-
-  // 비목 코드 (기본 810 = 자산)
-  const bimok = '810';
-
-  // 취득연도
-  const dateStr = asset.구매일자 || asset.취득일 || '';
-  const year = (dateStr.match(/^\d{4}/) || [String(new Date().getFullYear())])[0];
-
-  // 일련번호 (기존 numeric 자산코드 활용)
-  const seq = String(asset.자산코드 || 0).padStart(4, '0');
-
-  return `ASAN-SC-${unit}-${bimok}-${year}-${seq}`;
 }
 
 function renderPrintTab(data) {
